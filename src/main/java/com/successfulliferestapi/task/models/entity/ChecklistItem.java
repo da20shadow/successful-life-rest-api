@@ -1,9 +1,8 @@
-package com.successfulliferestapi.task.models.entity;
+package com.successfulliferestapi.Task.models.entity;
 
-import com.successfulliferestapi.shared.models.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import com.successfulliferestapi.Shared.models.entity.BaseEntity;
+import com.successfulliferestapi.User.models.entity.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +15,22 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "checklists", uniqueConstraints = {
+@Table(name = "checklist_items", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"task_id", "title"})
 })
 public class ChecklistItem extends BaseEntity {
+
+    @Column(name = "title", length = 145)
+    private String title;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean completed = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
+    private Task task;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
