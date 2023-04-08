@@ -12,13 +12,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LoginRequestDTO {
 
-    @NotBlank
-    @Size(min = 9, max = 145)
-    @Pattern(regexp = "^[a-z]+[a-z0-9_]+[@][a-z]{2,}[.][a-z]{2,}$")
+    @NotBlank(message = "Email is required!")
+    @Size(min = 9, max = 145, message = "Email must be between 9 and 145 characters long!")
+    @Pattern(regexp = "^[a-z]+[a-z0-9_]+[@][a-z]{2,}[.][a-z]{2,}$",message = "Please enter valid email format!")
     private String email;
 
-    @NotBlank
-    @Size(min = 6, max = 145)
+    @NotBlank(message = "Password is required!")
+    @Size(min = 6, max = 145, message = "Password must be between 6 and 145 characters long!")
     private String password;
 
 }
