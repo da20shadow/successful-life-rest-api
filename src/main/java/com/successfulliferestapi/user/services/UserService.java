@@ -46,7 +46,7 @@ public class UserService {
         if (!passwordEncoder.matches(requestDTO.getOldPassword(), user.getPassword())) {
             throw new UserException(UserMessages.Error.INVALID_PASSWORD);
         }
-        
+
         user.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
         userRepository.save(user);
         return new SuccessResponseDTO(UserMessages.Success.UPDATE_PASSWORD);
