@@ -1,14 +1,19 @@
-package com.successfulliferestapi.target.models.entity;
+package com.successfulliferestapi.Target.models.entity;
 
-import com.successfulliferestapi.shared.models.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import com.successfulliferestapi.Goal.models.entity.Goal;
+import com.successfulliferestapi.Shared.models.entity.BaseEntity;
+import com.successfulliferestapi.Task.models.entity.Task;
+import com.successfulliferestapi.User.models.entity.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +25,28 @@ import lombok.Builder;
         @UniqueConstraint(columnNames = {"goal_id", "title"})
 })
 public class Target extends BaseEntity {
+
+    @Column(name = "title",nullable = false,length = 145)
+    private String title;
+
+    @Column(name = "description",columnDefinition = "TEXT",nullable = false)
+    private String description;
+
+    @Column(name = "favorite",columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean favorite = false;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goal_id",nullable = false)
+    private Goal goal;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "target", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
+
 }
