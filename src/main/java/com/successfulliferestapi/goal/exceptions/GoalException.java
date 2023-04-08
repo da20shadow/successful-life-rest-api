@@ -1,4 +1,4 @@
-package com.successfulliferestapi.goal.exceptions;
+package com.successfulliferestapi.Goal.exceptions;
 
 public class GoalException extends RuntimeException{
     public GoalException(String message) {

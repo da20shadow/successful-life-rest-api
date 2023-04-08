@@ -1,7 +1,7 @@
 package com.successfulliferestapi.JWT.models.entity;
 
 import com.successfulliferestapi.JWT.models.enums.JwtTokenType;
-import com.successfulliferestapi.user.models.entity.User;
+import com.successfulliferestapi.User.models.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

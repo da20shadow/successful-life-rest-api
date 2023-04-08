@@ -1,4 +1,4 @@
-package com.successfulliferestapi.user.models.dto;
+package com.successfulliferestapi.User.models.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -8,7 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import com.successfulliferestapi.JWT.models.entity.Token;
 import com.successfulliferestapi.JWT.models.enums.JwtTokenType;
 import com.successfulliferestapi.JWT.repositories.JwtTokenRepository;
-import com.successfulliferestapi.user.models.entity.User;
+import com.successfulliferestapi.User.models.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

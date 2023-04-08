@@ -1,4 +1,4 @@
-package com.successfulliferestapi.idea.constants;
+package com.successfulliferestapi.Idea.constants;
 
 public class IdeaMessages {
     public static class Error {

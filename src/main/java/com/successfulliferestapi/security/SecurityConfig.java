@@ -1,6 +1,7 @@
-package com.successfulliferestapi.security;
+package com.successfulliferestapi.Security;
 
 import com.successfulliferestapi.JWT.config.JwtAuthFilter;
+import com.successfulliferestapi.User.models.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

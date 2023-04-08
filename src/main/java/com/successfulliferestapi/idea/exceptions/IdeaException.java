@@ -1,4 +1,4 @@
-package com.successfulliferestapi.idea.exceptions;
+package com.successfulliferestapi.Idea.exceptions;
 
 public class IdeaException extends RuntimeException{
     public IdeaException(String message) {

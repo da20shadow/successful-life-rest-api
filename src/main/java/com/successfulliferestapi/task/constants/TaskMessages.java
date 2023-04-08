@@ -1,4 +1,4 @@
-package com.successfulliferestapi.task.constants;
+package com.successfulliferestapi.Task.constants;
 
 public class TaskMessages {
     public static class Error {

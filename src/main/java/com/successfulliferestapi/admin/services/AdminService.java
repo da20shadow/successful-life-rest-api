@@ -1,4 +1,4 @@
-package com.successfulliferestapi.admin.services;
+package com.successfulliferestapi.Admin.services;
 
 import org.springframework.stereotype.Service;
 

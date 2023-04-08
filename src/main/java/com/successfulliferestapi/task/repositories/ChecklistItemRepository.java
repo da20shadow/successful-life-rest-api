@@ -1,6 +1,6 @@
-package com.successfulliferestapi.task.repositories;
+package com.successfulliferestapi.Task.repositories;
 
-import com.successfulliferestapi.task.models.entity.ChecklistItem;
+import com.successfulliferestapi.Task.models.entity.ChecklistItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

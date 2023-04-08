@@ -1,4 +1,4 @@
-package com.successfulliferestapi.target.services;
+package com.successfulliferestapi.Target.services;
 
 import org.springframework.stereotype.Service;
 

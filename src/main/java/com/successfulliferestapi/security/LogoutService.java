@@ -1,4 +1,4 @@
-package com.successfulliferestapi.security;
+package com.successfulliferestapi.Security;
 
 import com.successfulliferestapi.JWT.repositories.JwtTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
-package com.successfulliferestapi.idea.repositories;
+package com.successfulliferestapi.Idea.repositories;
 
-import com.successfulliferestapi.idea.models.entity.Idea;
+import com.successfulliferestapi.Idea.models.entity.Idea;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

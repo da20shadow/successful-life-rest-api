@@ -1,7 +1,7 @@
-package com.successfulliferestapi.security;
+package com.successfulliferestapi.Security;
 
-import com.successfulliferestapi.user.constants.UserMessages;
-import com.successfulliferestapi.user.repositories.UserRepository;
+import com.successfulliferestapi.User.constants.UserMessages;
+import com.successfulliferestapi.User.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ public class AuthApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(UserMessages.ErrorMessages.USER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException(UserMessages.Error.NOT_FOUND));
     }
 
     @Bean

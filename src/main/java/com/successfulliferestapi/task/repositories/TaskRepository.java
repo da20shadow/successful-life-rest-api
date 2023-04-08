@@ -1,6 +1,6 @@
-package com.successfulliferestapi.task.repositories;
+package com.successfulliferestapi.Task.repositories;
 
-import com.successfulliferestapi.task.models.entity.Task;
+import com.successfulliferestapi.Task.models.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
-package com.successfulliferestapi.goal.repositories;
+package com.successfulliferestapi.Goal.repositories;
 
-import com.successfulliferestapi.goal.models.entity.Goal;
+import com.successfulliferestapi.Goal.models.entity.Goal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

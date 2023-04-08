@@ -1,4 +1,4 @@
-package com.successfulliferestapi.shared.models.entity;
+package com.successfulliferestapi.Shared.models.entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -1,4 +1,4 @@
-package com.successfulliferestapi.target.constants;
+package com.successfulliferestapi.Target.constants;
 
 public class TargetMessages {
     public static class Error {

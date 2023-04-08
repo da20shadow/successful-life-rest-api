@@ -1,4 +1,4 @@
-package com.successfulliferestapi.admin.controllers;
+package com.successfulliferestapi.Admin.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

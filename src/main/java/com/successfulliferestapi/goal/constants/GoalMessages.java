@@ -1,4 +1,4 @@
-package com.successfulliferestapi.goal.constants;
+package com.successfulliferestapi.Goal.constants;
 
 public class GoalMessages {
     public static class Error {

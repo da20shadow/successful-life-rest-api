@@ -1,4 +1,4 @@
-package com.successfulliferestapi.admin.constants;
+package com.successfulliferestapi.Admin.constants;
 
 public class AdminMessages {
     public static class Error {

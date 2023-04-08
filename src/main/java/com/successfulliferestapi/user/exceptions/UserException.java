@@ -1,4 +1,4 @@
-package com.successfulliferestapi.user.exceptions;
+package com.successfulliferestapi.User.exceptions;
 
 public class UserException extends RuntimeException{
     public UserException(String message) {
