@@ -1,6 +1,7 @@
 package com.successfulliferestapi.Task.models.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,11 @@ public class AddTaskDTO {
     private String title;
 
     private String description;
+
+    @NotNull(message = "Task Status is required!")
     private String status;
+
+    @NotNull(message = "Task Priority is required!")
     private String priority;
     private boolean urgent = false;
     private boolean important = false;

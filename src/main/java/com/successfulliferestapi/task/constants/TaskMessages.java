@@ -7,6 +7,7 @@ public class TaskMessages {
         public static final String DELETE = "Unable to delete task. Please try again.";
         public static final String DUPLICATE_TITLE = "A task with the same title already exists.";
         public static final String NO_CHANGES = "There are no changes to save.";
+        public static final String NOT_FOUND = "Task not found!";
     }
 
     public static class Success {

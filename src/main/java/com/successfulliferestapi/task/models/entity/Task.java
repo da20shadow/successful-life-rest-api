@@ -34,10 +34,10 @@ public class Task extends BaseEntity {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatus status;
+    private TaskStatus status = TaskStatus.TO_DO; // Set default enum value for status
 
     @Enumerated(EnumType.ORDINAL)
-    private TaskPriority priority;
+    private TaskPriority priority = TaskPriority.NO_PRIORITY; // Set default enum value for priority
 
     @Column(name = "urgent", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean urgent = false;
