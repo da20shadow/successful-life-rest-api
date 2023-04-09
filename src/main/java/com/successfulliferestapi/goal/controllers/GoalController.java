@@ -41,15 +41,14 @@ public class GoalController {
 
         try {
             User user = (User) authentication.getPrincipal();
-            return ResponseEntity.status(201)
-                    .body(goalService.add(user,addGoalDTO));
+            return ResponseEntity.status(201).body(goalService.add(user,addGoalDTO));
         } catch (Exception exception) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
         }
     }
 
     @PatchMapping("/edit/{goalId}/title")
-    public ResponseEntity<?> updateGoal(@Valid @RequestBody UpdateGoalTitleDTO updateGoalTitleDTO,
+    public ResponseEntity<?> updateGoalTitle(@Valid @RequestBody UpdateGoalTitleDTO updateGoalTitleDTO,
                                         BindingResult result, @PathVariable Long goalId,
                                         Authentication authentication) {
 
@@ -69,7 +68,7 @@ public class GoalController {
     }
 
     @PatchMapping("/edit/{goalId}/description")
-    public ResponseEntity<?> updateGoal(@Valid @RequestBody UpdateGoalDescriptionDTO updateGoalDescriptionDTO,
+    public ResponseEntity<?> updateGoalDescription(@Valid @RequestBody UpdateGoalDescriptionDTO updateGoalDescriptionDTO,
                                         BindingResult result,
                                         @PathVariable Long goalId,
                                         Authentication authentication) {
@@ -90,7 +89,7 @@ public class GoalController {
     }
 
     @PatchMapping("/edit/{goalId}/deadline")
-    public ResponseEntity<?> updateGoal(@Valid @RequestBody UpdateGoalDeadlineDTO updateGoalDeadlineDTO,
+    public ResponseEntity<?> updateGoalDeadline(@Valid @RequestBody UpdateGoalDeadlineDTO updateGoalDeadlineDTO,
                                         BindingResult result,
                                         @PathVariable Long goalId,
                                         Authentication authentication) {
@@ -112,7 +111,6 @@ public class GoalController {
 
     @DeleteMapping("/{goalId}")
     public ResponseEntity<?> deleteGoal(@PathVariable Long goalId, Authentication authentication) {
-        System.out.println(goalId);
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(goalService.deleteGoal(goalId,user.getId()));

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,8 @@ public class GoalService {
     private final ModelMapper modelMapper;
 
     //CREATE New Goal
-    public GoalDTO add(User user, AddGoalDTO addGoalDTO) {
+    @Transactional
+    public AddGoalSuccessResponseDTO add(User user, AddGoalDTO addGoalDTO) {
 
         if (goalRepository.existsByTitleAndUser_Id(addGoalDTO.getTitle(), user.getId())) {
             throw new GoalException(GoalMessages.Error.DUPLICATE_TITLE);
@@ -39,7 +41,12 @@ public class GoalService {
         goal.setUser(user);
         goal.setCreatedAt(LocalDateTime.now());
         Goal createdGoal = goalRepository.save(goal);
-        return modelMapper.map(createdGoal, GoalDTO.class);
+        GoalDTO goalDTO = modelMapper.map(createdGoal, GoalDTO.class);
+        goalDTO.setDeadline(createdGoal.getDeadline());
+        goalDTO.setTotalCompletedTargets(0);
+        goalDTO.setTotalTargets(0);
+        goalDTO.setTotalIdeas(0);
+        return new AddGoalSuccessResponseDTO(GoalMessages.Success.ADD, goalDTO);
     }
 
     //CHANGE Goal Title
@@ -62,7 +69,7 @@ public class GoalService {
         }
 
         Goal goal = goalOptional.get();
-        goal.setTitle(updateGoalDescriptionDTO.getDescription());
+        goal.setDescription(updateGoalDescriptionDTO.getDescription());
         goalRepository.save(goal);
         return new SuccessResponseDTO(GoalMessages.Success.UPDATED_DESCRIPTION);
     }
@@ -75,7 +82,7 @@ public class GoalService {
         }
 
         Goal goal = goalOptional.get();
-        goal.setTitle(updateGoalDeadlineDTO.getDeadline());
+        goal.setDeadline(LocalDate.parse(updateGoalDeadlineDTO.getDeadline()));
         goalRepository.save(goal);
         return new SuccessResponseDTO(GoalMessages.Success.UPDATED_DEADLINE);
     }
