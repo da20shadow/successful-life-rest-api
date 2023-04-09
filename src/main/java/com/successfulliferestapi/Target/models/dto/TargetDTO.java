@@ -16,6 +16,7 @@ public class TargetDTO {
     private String title;
     private String description;
     private LocalDateTime createdAt;
+    private Long goalId;
     private int totalTasks;
     private int totalCompletedTasks;
     private List<Task> tasks;
