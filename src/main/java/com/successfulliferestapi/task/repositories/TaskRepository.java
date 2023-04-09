@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,9 +26,92 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     @Query("SELECT t FROM Task t WHERE t.target.id = :targetId AND t.status = 'COMPLETED'")
     Page<Task> findCompletedByTargetId(Long targetId, Pageable pageable);
 
-    Optional<Task> findByTitleAndTargetIdAndUserId(String title, Long targetId, Long userId);
+    //GET Task by title, target ID, and user ID
+    Optional<Task> findByTitleAndTargetIdAndUser_Id(String title, Long targetId, Long userId);
 
+    //GET Target Tasks
     Page<Task> findByUserIdAndTargetId(Long userId, Long targetId, Pageable pageable);
 
+    //GET Task by ID
     Optional<Task> findByIdAndUserId(Long taskId, Long userId);
+
+    //GET today tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE (FUNCTION('DATE', t.dueDate) = :today " +
+            "OR FUNCTION('DATE', t.startDate) = :today " +
+            "OR FUNCTION('DATE', t.startDate) < :today AND FUNCTION('DATE', t.dueDate) > :today) " +
+            "AND t.status <> 'COMPLETED' " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    List<Task> findNotCompletedTodayTasks(Long userId, LocalDate today);
+
+    //GET Week Tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE ((t.dueDate BETWEEN :dueDate AND :dueDate2) " +
+            "OR (t.startDate BETWEEN :startDate AND :startDate2)) " +
+            "AND t.status <> 'COMPLETED'")
+    List<Task> findAllByUserIdAndWeek(Long userId, LocalDateTime dueDate, LocalDateTime dueDate2,
+                                      LocalDateTime startDate, LocalDateTime startDate2);
+
+    //GET Month Tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE (FUNCTION('YEAR', t.dueDate) = :year AND FUNCTION('MONTH', t.dueDate) = :month " +
+            "OR FUNCTION('YEAR', t.startDate) = :year AND FUNCTION('MONTH', t.startDate) = :month ) " +
+            "AND t.status <> 'COMPLETED'")
+    List<Task> findAllByUserIdAndMonth(Long userId, int year, int month);
+
+
+    //GET all urgent tasks
+    Page<Task> findByUserIdAndUrgentTrue(Long userId, Pageable pageable);
+
+    //Get today important tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE (FUNCTION('DATE', t.dueDate) = :today " +
+            "OR FUNCTION('DATE', t.startDate) = :today " +
+            "OR FUNCTION('DATE', t.startDate) < :today AND FUNCTION('DATE', t.dueDate) > :today) " +
+            "AND t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    Page<Task> findTodayImportantTasks(Long userId, LocalDate today, Pageable pageable);
+
+    //Get Important Overdue tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE FUNCTION('DATE', t.dueDate) < :today " +
+            "AND t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    Page<Task> findAllOverdueImportantTasks(Long userId, LocalDate today, Pageable pageable);
+
+    //Get Next Important tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "AND (function('date',t.startDate) > :today " +
+            "OR function('date',t.dueDate) > :today AND t.startDate IS NULL) " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    Page<Task> findAllNextImportantTasks(Long userId, LocalDate today, Pageable pageable);
+
+    //Get unscheduled important tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "AND t.dueDate IS NULL " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    Page<Task> findAllUnscheduledImportantTasks(Long userId, Pageable pageable);
+
+    //Get Overdue tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE FUNCTION('DATE', t.dueDate) < :today " +
+            "AND t.status <> 'COMPLETED' " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    List<Task> findAllOverdueTasks(Long userId, LocalDate today);
+
+    //Get Next tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE t.status <> 'COMPLETED' " +
+            "AND (function('date',t.startDate) > :today " +
+            "OR function('date',t.dueDate) > :today AND t.startDate IS NULL) " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    List<Task> findAllNextTasks(Long userId, LocalDate today);
+
+    //Get unscheduled tasks
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE t.status <> 'COMPLETED' AND t.dueDate IS NULL " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    List<Task> findAllUnscheduledTasks(Long userId);
 }
