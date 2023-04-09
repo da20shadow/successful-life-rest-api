@@ -26,10 +26,14 @@ public class AuthService {
             throw new UserException(UserMessages.Error.EMAIL_ALREADY_EXIST);
         }
 
+        int atIndex = request.getEmail().indexOf("@"); // Get the index of '@' symbol
+        String username = request.getEmail().substring(0, atIndex); // Get the substring from start to '@' symbol
+
         // Create a new user entity from the register request DTO
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .email(request.getEmail())
+                .username(username)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(UserRole.USER)
                 .build();
