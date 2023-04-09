@@ -6,7 +6,10 @@ import com.successfulliferestapi.Goal.models.entity.Goal;
 import com.successfulliferestapi.Idea.models.dto.IdeaDTO;
 import com.successfulliferestapi.Idea.models.entity.Idea;
 import com.successfulliferestapi.Idea.models.entity.IdeaTag;
+import com.successfulliferestapi.Target.models.dto.TargetDTO;
+import com.successfulliferestapi.Target.models.entity.Target;
 import com.successfulliferestapi.Task.models.dto.AddTaskDTO;
+import com.successfulliferestapi.Task.models.dto.TaskDTO;
 import com.successfulliferestapi.Task.models.entity.Task;
 import com.successfulliferestapi.Utils.converters.StringToLocalDate;
 import com.successfulliferestapi.Utils.converters.StringToLocalDateTime;
@@ -36,7 +39,9 @@ public class ModelMapperConfig {
         addIdeaMappings(modelMapper);
         addGoalMappings(modelMapper);
         goalToGoalDTOMappings(modelMapper);
+        targetToTargetDTOMappings(modelMapper);
         addTaskMappings(modelMapper);
+        taskToTaskDTOMappings(modelMapper);
 
         Converter<LocalDateTime, String> localDateTimeToString = new AbstractConverter<LocalDateTime, String>() {
             @Override
@@ -97,6 +102,16 @@ public class ModelMapperConfig {
         typeMap.addMappings(mapper -> mapper.skip(GoalDTO::setTotalIdeas));
     }
 
+    private void targetToTargetDTOMappings(ModelMapper modelMapper) {
+        TypeMap<Target, TargetDTO> typeMap =
+                modelMapper.createTypeMap(Target.class, TargetDTO.class);
+
+        typeMap.addMappings(mapper -> mapper.skip(TargetDTO::setTasks));
+        typeMap.addMappings(mapper -> mapper.skip(TargetDTO::setTotalTasks));
+        typeMap.addMappings(mapper -> mapper.skip(TargetDTO::setTotalCompletedTasks));
+        typeMap.addMappings(mapper -> mapper.skip(TargetDTO::setGoalId));
+    }
+
     private void addTaskMappings(ModelMapper modelMapper) {
         TypeMap<AddTaskDTO, Task> typeMap =
                 modelMapper.createTypeMap(AddTaskDTO.class, Task.class)
@@ -106,6 +121,14 @@ public class ModelMapperConfig {
                                 .map(AddTaskDTO::getDueDate, Task::setDueDate));
 
         typeMap.addMappings(mapper -> mapper.skip(Task::setId));
+        // add other mappings specific to AddTaskDTO and Task classes
+    }
+
+    private void taskToTaskDTOMappings(ModelMapper modelMapper) {
+        TypeMap<Task, TaskDTO> typeMap =
+                modelMapper.createTypeMap(Task.class, TaskDTO.class);
+
+        typeMap.addMappings(mapper -> mapper.skip(TaskDTO::setTargetId));
         // add other mappings specific to AddTaskDTO and Task classes
     }
 }
