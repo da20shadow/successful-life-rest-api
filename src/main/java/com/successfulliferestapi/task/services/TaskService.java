@@ -79,7 +79,7 @@ public class TaskService {
         if (addTaskDTO.getTargetId() != null) {
             taskDTO.setTargetId(addTaskDTO.getTargetId());
         }
-        return new AddTaskSuccessResponseDTO(TaskMessages.Success.ADD,taskDTO);
+        return new AddTaskSuccessResponseDTO(TaskMessages.Success.ADDED,taskDTO);
     }
 
     //UPDATE TASK
@@ -137,7 +137,7 @@ public class TaskService {
 
         task = taskRepository.save(task);
         TaskDTO taskDTO = modelMapper.map(task, TaskDTO.class);
-        return new EditTaskSuccessResponseDTO(TaskMessages.Success.ADD, taskDTO);
+        return new EditTaskSuccessResponseDTO(TaskMessages.Success.ADDED, taskDTO);
     }
 
     @Transactional
