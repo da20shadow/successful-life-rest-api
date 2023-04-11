@@ -10,8 +10,9 @@ public class AdminMessages {
     }
 
     public static class Success {
-        public static final String ADD_USER = "Successfully added a new user.";
-        public static final String UPDATE_USER = "Successfully updated the user.";
-        public static final String DELETE_USER = "Successfully deleted the user.";
+        public static final String ADDED_USER = "Successfully added a new user.";
+        public static final String UPDATED_USER = "Successfully updated the user.";
+        public static final String DELETED_USER = "Successfully deleted the user.";
+        public static final String BANNED_USER = "Your account is banned!";
     }
 }
