@@ -2,6 +2,7 @@ package com.successfulliferestapi.User.controllers;
 
 import com.successfulliferestapi.Shared.models.dto.ErrorResponseDTO;
 import com.successfulliferestapi.Shared.models.dto.SuccessResponseDTO;
+import com.successfulliferestapi.User.exceptions.UserException;
 import com.successfulliferestapi.User.models.dto.LoginRequestDTO;
 import com.successfulliferestapi.User.models.dto.LoginSuccessResponseDTO;
 import com.successfulliferestapi.User.models.dto.RegisterRequestDTO;
@@ -38,7 +39,7 @@ public class AuthController {
         try {
             SuccessResponseDTO message = new SuccessResponseDTO(authService.register(request));
             return ResponseEntity.status(201).body(message);
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -54,7 +55,7 @@ public class AuthController {
         try {
             LoginSuccessResponseDTO response = authService.login(request);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }

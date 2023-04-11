@@ -1,6 +1,7 @@
 package com.successfulliferestapi.User.controllers;
 
 import com.successfulliferestapi.Shared.models.dto.ErrorResponseDTO;
+import com.successfulliferestapi.User.exceptions.UserException;
 import com.successfulliferestapi.User.models.dto.ChangeEmailRequestDTO;
 import com.successfulliferestapi.User.models.dto.ChangeNamesRequestDTO;
 import com.successfulliferestapi.User.models.dto.ChangePasswordRequestDTO;
@@ -39,7 +40,7 @@ public class UserController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(userService.editEmail(user, email));
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -59,7 +60,7 @@ public class UserController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(userService.editUsername(user, username));
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -79,7 +80,7 @@ public class UserController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(userService.editPassword(user, password));
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -101,7 +102,7 @@ public class UserController {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(userService.editNames(user, names));
 
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -112,7 +113,7 @@ public class UserController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(userService.deleteAccount(user));
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -123,7 +124,7 @@ public class UserController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(userService.getProfile(user));
-        } catch (Exception e) {
+        } catch (UserException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
