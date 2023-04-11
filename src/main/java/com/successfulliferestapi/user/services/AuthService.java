@@ -67,6 +67,6 @@ public class AuthService {
                 jwtToken,
                 user.getFirstName(),
                 user.getEmail(),
-                user.getRole());
+                user.getRole().name());
     }
 }

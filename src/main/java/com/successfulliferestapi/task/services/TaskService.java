@@ -11,6 +11,7 @@ import com.successfulliferestapi.Task.models.entity.Task;
 import com.successfulliferestapi.Task.models.enums.TaskPriority;
 import com.successfulliferestapi.Task.models.enums.TaskStatus;
 import com.successfulliferestapi.Task.repositories.TaskRepository;
+import com.successfulliferestapi.Task.validations.validators.TaskStatusValidator;
 import com.successfulliferestapi.User.models.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +23,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
+    private static final Logger LOGGER = Logger.getLogger(TaskService.class.getName());
     private final TaskRepository taskRepository;
     private final TargetRepository targetRepository;
     private final ModelMapper modelMapper;
@@ -45,7 +48,6 @@ public class TaskService {
             Optional<Target> optionalTarget = targetRepository.findByIdAndUserId(addTaskDTO.getTargetId(), user.getId());
             Target target = optionalTarget.orElseThrow(() -> new TargetException(TargetMessages.Error.NOT_FOUND));
             task.setTarget(target);
-
         }
 
         if (addTaskDTO.getStatus() == null) {
@@ -99,10 +101,10 @@ public class TaskService {
             task.setDescription(editTaskDTO.getDescription());
         }
         if (editTaskDTO.getStatus() != null) {
-            task.setStatus(editTaskDTO.getStatus());
+            task.setStatus(TaskStatus.valueOf(editTaskDTO.getStatus()));
         }
         if (editTaskDTO.getPriority() != null) {
-            task.setPriority(editTaskDTO.getPriority());
+            task.setPriority(TaskPriority.valueOf(editTaskDTO.getPriority()));
         }
 
         if (Objects.equals(editTaskDTO.isImportant(), Boolean.TRUE)) {
@@ -137,7 +139,7 @@ public class TaskService {
 
         task = taskRepository.save(task);
         TaskDTO taskDTO = modelMapper.map(task, TaskDTO.class);
-        return new EditTaskSuccessResponseDTO(TaskMessages.Success.ADDED, taskDTO);
+        return new EditTaskSuccessResponseDTO(TaskMessages.Success.UPDATED, taskDTO);
     }
 
     @Transactional

@@ -15,5 +15,5 @@ public class LoginSuccessResponseDTO {
     private String token;
     private String firstName;
     private String email;
-    private UserRole role;
+    private String role;
 }

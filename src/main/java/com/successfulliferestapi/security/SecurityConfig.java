@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/management/api/v1/**").hasRole(UserRole.ADMIN.name())
+//                .requestMatchers("/management/api/v1/**").hasRole(UserRole.ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

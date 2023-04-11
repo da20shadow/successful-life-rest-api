@@ -3,6 +3,7 @@ package com.successfulliferestapi.JWT.config;
 import com.successfulliferestapi.JWT.repositories.JwtTokenRepository;
 import com.successfulliferestapi.JWT.services.JwtService;
 import com.successfulliferestapi.JWT.models.entity.Token;
+import com.successfulliferestapi.Task.services.TaskService;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,20 +17,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-
+    private static final Logger LOGGER = Logger.getLogger(TaskService.class.getName());
     private final JwtService jwtTokenService;
     private final UserDetailsService userDetailsService;
     private final JwtTokenRepository jwtTokenRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {

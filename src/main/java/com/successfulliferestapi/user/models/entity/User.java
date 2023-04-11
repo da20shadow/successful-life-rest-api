@@ -40,6 +40,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true, length = 45)
     private String username;
 
+    @Column
+    private boolean banned = false;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
