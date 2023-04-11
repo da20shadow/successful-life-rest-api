@@ -1,5 +1,6 @@
 package com.successfulliferestapi.Idea.controllers;
 
+import com.successfulliferestapi.Idea.exceptions.IdeaException;
 import com.successfulliferestapi.Idea.models.dto.AddIdeaDTO;
 import com.successfulliferestapi.Idea.models.dto.EditIdeaDTO;
 import com.successfulliferestapi.Idea.services.IdeaService;
@@ -40,7 +41,7 @@ public class IdeaController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.status(201).body(ideaService.add(user, addIdeaDTO));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -52,7 +53,7 @@ public class IdeaController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(ideaService.update(ideaId,user.getId(),editIdeaDTO));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -62,7 +63,7 @@ public class IdeaController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(ideaService.deleteIdea(id, user));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -74,7 +75,7 @@ public class IdeaController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(ideaService.getIdeaById(id, user.getId()));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -89,7 +90,7 @@ public class IdeaController {
             User user = (User) authentication.getPrincipal();
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
             return ResponseEntity.ok(ideaService.findByUserId(user.getId(), pageable));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -105,7 +106,7 @@ public class IdeaController {
             User user = (User) authentication.getPrincipal();
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
             return ResponseEntity.ok(ideaService.getIdeasByTag(user.getId(), tagName, pageable));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -116,7 +117,7 @@ public class IdeaController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(ideaService.getUserIdeaTags(user.getId()));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -132,7 +133,7 @@ public class IdeaController {
             User user = (User) authentication.getPrincipal();
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
             return ResponseEntity.ok(ideaService.getGoalIdeas(user.getId(), goalId, pageable));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -149,7 +150,7 @@ public class IdeaController {
             User user = (User) authentication.getPrincipal();
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
             return ResponseEntity.ok(ideaService.getGoalIdeasByTag(user.getId(), goalId, tagName, pageable));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -161,7 +162,7 @@ public class IdeaController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(ideaService.getGoalIdeasTags(user.getId(),goalId));
-        } catch (Exception e) {
+        } catch (IdeaException e) {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponseDTO(e.getMessage()));
         }
