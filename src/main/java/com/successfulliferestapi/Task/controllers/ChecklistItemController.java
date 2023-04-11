@@ -1,6 +1,7 @@
 package com.successfulliferestapi.Task.controllers;
 
 import com.successfulliferestapi.Shared.models.dto.ErrorResponseDTO;
+import com.successfulliferestapi.Task.exceptions.TaskException;
 import com.successfulliferestapi.Task.models.dto.AddChecklistItemDTO;
 import com.successfulliferestapi.Task.models.dto.EditChecklistItemDTO;
 import com.successfulliferestapi.Task.services.ChecklistService;
@@ -30,7 +31,7 @@ public class ChecklistItemController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok().body(checklistService.add(taskId, user, checklistItem));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -41,7 +42,7 @@ public class ChecklistItemController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok().body(checklistService.markAllAsCompleted(taskId, user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -60,7 +61,7 @@ public class ChecklistItemController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok().body(checklistService.editItem(itemId, user.getId(), item));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -71,7 +72,7 @@ public class ChecklistItemController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok().body(checklistService.deleteItem(itemId, user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -81,7 +82,7 @@ public class ChecklistItemController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(checklistService.getAllByTaskId(taskId,user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -91,7 +92,7 @@ public class ChecklistItemController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(checklistService.getAllByTaskId(taskId,user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
