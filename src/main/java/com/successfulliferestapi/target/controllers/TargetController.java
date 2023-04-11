@@ -1,6 +1,7 @@
 package com.successfulliferestapi.Target.controllers;
 
 import com.successfulliferestapi.Shared.models.dto.ErrorResponseDTO;
+import com.successfulliferestapi.Target.exceptions.TargetException;
 import com.successfulliferestapi.Target.models.dto.AddTargetDTO;
 import com.successfulliferestapi.Target.models.dto.UpdateTargetDescriptionDTO;
 import com.successfulliferestapi.Target.models.dto.UpdateTargetTitleDTO;
@@ -41,7 +42,7 @@ public class TargetController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.status(201).body(targetService.add(user, addTargetDTO));
-        } catch (Exception e) {
+        } catch (TargetException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -63,7 +64,7 @@ public class TargetController {
             User user = (User) authentication.getPrincipal();
             System.out.println(request.getTitle());
             return ResponseEntity.ok(targetService.changeTitle(user.getId(),targetId,request));
-        } catch (Exception exception) {
+        } catch (TargetException exception) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
         }
     }
@@ -85,7 +86,7 @@ public class TargetController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(targetService.changeDescription(user.getId(),targetId, updateTargetDescriptionDTO));
-        } catch (Exception exception) {
+        } catch (TargetException exception) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
         }
     }
@@ -95,7 +96,7 @@ public class TargetController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(targetService.deleteTarget(targetId,user.getId()));
-        } catch (Exception e) {
+        } catch (TargetException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -107,7 +108,7 @@ public class TargetController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(targetService.getById(targetId, user.getId()));
-        } catch (Exception e) {
+        } catch (TargetException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -122,7 +123,7 @@ public class TargetController {
             User user = (User) authentication.getPrincipal();
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
             return ResponseEntity.ok(targetService.getAllByGoalId(goalId, user.getId(),pageable));
-        } catch (Exception e) {
+        } catch (TargetException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }

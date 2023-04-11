@@ -1,5 +1,6 @@
 package com.successfulliferestapi.Goal.controllers;
 
+import com.successfulliferestapi.Goal.exceptions.GoalException;
 import com.successfulliferestapi.Goal.models.dto.AddGoalDTO;
 import com.successfulliferestapi.Goal.models.dto.UpdateGoalDeadlineDTO;
 import com.successfulliferestapi.Goal.models.dto.UpdateGoalDescriptionDTO;
@@ -42,7 +43,7 @@ public class GoalController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.status(201).body(goalService.add(user,addGoalDTO));
-        } catch (Exception exception) {
+        } catch (GoalException exception) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
         }
     }
@@ -62,7 +63,7 @@ public class GoalController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(goalService.changeTitle(user.getId(),goalId,updateGoalTitleDTO));
-        } catch (Exception exception) {
+        } catch (GoalException exception) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
         }
     }
@@ -83,7 +84,7 @@ public class GoalController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(goalService.changeDescription(user.getId(),goalId, updateGoalDescriptionDTO));
-        } catch (Exception exception) {
+        } catch (GoalException exception) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
         }
     }
@@ -104,7 +105,7 @@ public class GoalController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(goalService.changeDeadline(user.getId(),goalId, updateGoalDeadlineDTO));
-        } catch (Exception exception) {
+        } catch (GoalException exception) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
         }
     }
@@ -114,7 +115,7 @@ public class GoalController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(goalService.deleteGoal(goalId,user.getId()));
-        } catch (Exception e) {
+        } catch (GoalException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -132,7 +133,7 @@ public class GoalController {
                 return ResponseEntity.ok(goalService.getAllByCategory(user.getId(), goalCategory, pageable));
             }
             return ResponseEntity.ok(goalService.getAll(user.getId(), pageable));
-        } catch (Exception e) {
+        } catch (GoalException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -144,7 +145,7 @@ public class GoalController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(goalService.getById(goalId,user.getId()));
-        } catch (Exception e) {
+        } catch (GoalException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }

@@ -2,6 +2,7 @@ package com.successfulliferestapi.Task.controllers;
 
 import com.successfulliferestapi.Shared.models.dto.ErrorResponseDTO;
 import com.successfulliferestapi.Task.constants.TaskMessages;
+import com.successfulliferestapi.Task.exceptions.TaskException;
 import com.successfulliferestapi.Task.models.dto.AddTaskDTO;
 import com.successfulliferestapi.Task.models.dto.EditTaskDTO;
 import com.successfulliferestapi.Task.services.TaskService;
@@ -41,7 +42,7 @@ public class TaskController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.status(201).body(taskService.addTask(addTaskDTO, user));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -49,17 +50,18 @@ public class TaskController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateTask(@PathVariable Long id,
                                         @Valid @RequestBody EditTaskDTO editTaskDTO,
-                                        BindingResult bindingResult,
+                                        BindingResult result,
                                         Authentication authentication) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest()
-                    .body(Objects.requireNonNull(bindingResult.getFieldError())
-                            .getDefaultMessage());
+        if (result.hasErrors()) {
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(errors.get(0)));
         }
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(taskService.updateTask(id, editTaskDTO, user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(TaskMessages.Error.UPDATE));
         }
     }
@@ -70,7 +72,7 @@ public class TaskController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(taskService.getById(id,user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -81,7 +83,7 @@ public class TaskController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(taskService.getTodayTasks(user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -102,7 +104,7 @@ public class TaskController {
                 return ResponseEntity.badRequest().body(new ErrorResponseDTO("Invalid To Date!"));
             }
             return ResponseEntity.ok(taskService.getWeekTasks(user.getId(),from,to));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -123,7 +125,7 @@ public class TaskController {
                 return ResponseEntity.badRequest().body(new ErrorResponseDTO("Invalid Month!"));
             }
             return ResponseEntity.ok(taskService.getAllTasksForMonth(user.getId(),year,month));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -142,7 +144,7 @@ public class TaskController {
                     size, Sort.by("important").descending()
                             .and(Sort.by("createdAt").ascending()));
             return ResponseEntity.ok(taskService.getImportantTasks(user.getId(), pageable));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -158,7 +160,7 @@ public class TaskController {
             User user = (User) authentication.getPrincipal();
             Pageable pageable = PageRequest.of(page, size, Sort.by("urgent").descending());
             return ResponseEntity.ok(taskService.getUrgentTasks(user.getId(), pageable));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -178,7 +180,7 @@ public class TaskController {
                     Sort.Order.asc("dueDate").nullsLast()
             ));
             return ResponseEntity.ok(taskService.getTasksByTargetId(user.getId(), targetId, pageable));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
@@ -192,7 +194,7 @@ public class TaskController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(taskService.getAllTasks(user.getId()));
-        } catch (Exception e) {
+        } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
     }
