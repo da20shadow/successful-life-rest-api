@@ -17,5 +17,6 @@ public class GoalMessages {
         public static final String UPDATED_DESCRIPTION = "Successfully updated goal description.";
         public static final String UPDATED_DEADLINE = "Successfully updated goal deadline.";
         public static final String DELETED = "Successfully deleted the goal.";
+        public static final String RECOVERED = "Successfully recovered a deleted goal!";
     }
 }

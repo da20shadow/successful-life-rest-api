@@ -6,9 +6,15 @@ import com.successfulliferestapi.Goal.models.dto.*;
 import com.successfulliferestapi.Goal.models.entity.Goal;
 import com.successfulliferestapi.Goal.models.enums.GoalCategory;
 import com.successfulliferestapi.Goal.repositories.GoalRepository;
+import com.successfulliferestapi.Idea.models.entity.Idea;
+import com.successfulliferestapi.Idea.repositories.IdeaRepository;
 import com.successfulliferestapi.Shared.models.dto.SuccessResponseDTO;
 import com.successfulliferestapi.Target.models.entity.Target;
+import com.successfulliferestapi.Target.repositories.TargetRepository;
+import com.successfulliferestapi.Task.models.entity.ChecklistItem;
 import com.successfulliferestapi.Task.models.entity.Task;
+import com.successfulliferestapi.Task.repositories.ChecklistRepository;
+import com.successfulliferestapi.Task.repositories.TaskRepository;
 import com.successfulliferestapi.User.models.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +25,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class GoalService {
     private final GoalRepository goalRepository;
+    private final TargetRepository targetRepository;
+    private final TaskRepository taskRepository;
+    private final IdeaRepository ideaRepository;
+    private final ChecklistRepository checklistRepository;
     private final ModelMapper modelMapper;
 
     //CREATE New Goal
@@ -87,8 +95,30 @@ public class GoalService {
         return new SuccessResponseDTO(GoalMessages.Success.UPDATED_DEADLINE);
     }
 
-    //DELETE Goal
+    //RECOVER Soft Deleted Goal
+    @Transactional
+    public SuccessResponseDTO recoverDeletedGoal(Long goalId, Long userId) {
+        Goal goal = goalRepository.findByIdAndUserId(goalId, userId)
+                .orElseThrow(()-> new GoalException(GoalMessages.Error.NOT_FOUND));
+
+        //Recover Goal and all it's Ideas targets and tasks by changing is deleted to true
+        changeDeleted(goal,userId,false);
+        return new SuccessResponseDTO(GoalMessages.Success.RECOVERED);
+    }
+
+    //Soft DELETE Goal
+    @Transactional
     public SuccessResponseDTO deleteGoal(Long goalId, Long userId) {
+        Goal goal = goalRepository.findByIdAndUserId(goalId, userId)
+                .orElseThrow(()-> new GoalException(GoalMessages.Error.NOT_FOUND));
+        //Delete Goal and all  it's Ideas targets and tasks by changing is deleted to true
+        changeDeleted(goal,userId,true);
+
+        return new SuccessResponseDTO(GoalMessages.Success.DELETED);
+    }
+
+    //Permanent DELETE Goal
+    public SuccessResponseDTO permanentDeleteGoal(Long goalId, Long userId) {
         Goal goal = goalRepository.findByIdAndUserId(goalId, userId)
                 .orElseThrow(()-> new GoalException(GoalMessages.Error.NOT_FOUND));
         goalRepository.delete(goal);
@@ -106,6 +136,20 @@ public class GoalService {
     @Transactional
     public Page<GoalDTO> getAllByCategory(Long userId, GoalCategory goalCategory, Pageable pageable) {
         Page<Goal> goalsPage = goalRepository.findByUserIdAndCategory(userId, goalCategory,pageable);
+        return getGoalDTOS(goalsPage);
+    }
+
+    //GET All DELETED User Goals
+    @Transactional
+    public Page<GoalDTO> getAllDeleted(Long userId, Pageable pageable) {
+        Page<Goal> goalsPage = goalRepository.findByUserIdAndDeletedTrue(userId,pageable);
+        return getGoalDTOS(goalsPage);
+    }
+
+    //GET All DELETED User Goals By Category
+    @Transactional
+    public Page<GoalDTO> getAllDeletedByCategory(Long userId, GoalCategory goalCategory, Pageable pageable) {
+        Page<Goal> goalsPage = goalRepository.findByUserIdAndCategoryAndDeletedTrue(userId, goalCategory,pageable);
         return getGoalDTOS(goalsPage);
     }
 
@@ -145,6 +189,18 @@ public class GoalService {
         goalDTO.setTotalTargets(targets.size());
         goalDTO.setTotalCompletedTargets(totalCompletedTargets);
         return goalDTO;
+    }
+
+    //Change is Deleted
+    private void changeDeleted(Goal goal, Long userId, boolean isDeleted) {
+        LocalDateTime now = LocalDateTime.now();
+        goal.setDeleted(isDeleted);
+        goal.setDeletedAt(now);
+        goalRepository.save(goal);
+        targetRepository.changeTargetsDeletedByUserIdAndGoalId(userId, goal.getId(),isDeleted,now);
+        ideaRepository.changeIdeasDeletedByUserIdAndGoalId(userId, goal.getId(),isDeleted,now);
+        taskRepository.changeTasksDeletedByUserIdAndGoalId(userId,goal.getId(),isDeleted);
+        checklistRepository.changeChecklistItemsDeletedByUserIdAndGoalId(userId, goal.getId(),isDeleted);
     }
 
 }

@@ -48,6 +48,17 @@ public class GoalController {
         }
     }
 
+    @PostMapping("/recover/{goalId}")
+    public ResponseEntity<?> recoverGoal(@PathVariable Long goalId, Authentication authentication) {
+
+        try {
+            User user = (User) authentication.getPrincipal();
+            return ResponseEntity.status(201).body(goalService.recoverDeletedGoal(goalId,user.getId()));
+        } catch (GoalException exception) {
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(exception.getMessage()));
+        }
+    }
+
     @PatchMapping("/edit/{goalId}/title")
     public ResponseEntity<?> updateGoalTitle(@Valid @RequestBody UpdateGoalTitleDTO updateGoalTitleDTO,
                                         BindingResult result, @PathVariable Long goalId,
@@ -110,11 +121,23 @@ public class GoalController {
         }
     }
 
+    //Soft DELETE Goal
     @DeleteMapping("/{goalId}")
     public ResponseEntity<?> deleteGoal(@PathVariable Long goalId, Authentication authentication) {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(goalService.deleteGoal(goalId,user.getId()));
+        } catch (GoalException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
+        }
+    }
+
+    //Permanent DELETE Goal
+    @DeleteMapping("/permanent/{goalId}")
+    public ResponseEntity<?> permanentDeleteGoal(@PathVariable Long goalId, Authentication authentication) {
+        try {
+            User user = (User) authentication.getPrincipal();
+            return ResponseEntity.ok(goalService.permanentDeleteGoal(goalId,user.getId()));
         } catch (GoalException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -133,6 +156,24 @@ public class GoalController {
                 return ResponseEntity.ok(goalService.getAllByCategory(user.getId(), goalCategory, pageable));
             }
             return ResponseEntity.ok(goalService.getAll(user.getId(), pageable));
+        } catch (GoalException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/deleted")
+    public ResponseEntity<?> getAllDeletedGoals(@RequestParam(defaultValue = "") String category,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "24") int size,
+                                         Authentication authentication) {
+        try {
+            User user = (User) authentication.getPrincipal();
+            Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
+            GoalCategory goalCategory = category.equals("") ? null : GoalCategory.valueOf(category);
+            if (goalCategory != null) {
+                return ResponseEntity.ok(goalService.getAllDeletedByCategory(user.getId(), goalCategory, pageable));
+            }
+            return ResponseEntity.ok(goalService.getAllDeleted(user.getId(), pageable));
         } catch (GoalException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
