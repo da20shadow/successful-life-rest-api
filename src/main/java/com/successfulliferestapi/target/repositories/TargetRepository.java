@@ -4,8 +4,11 @@ import com.successfulliferestapi.Target.models.entity.Target;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,4 +24,10 @@ public interface TargetRepository extends JpaRepository<Target,Long> {
 
     //Retrieve all TARGETS by GOAL ID Set
     List<Target> findAllByGoalIdAndUserId(Long goalId, Long userId);
+
+    //Change is deleted
+    @Modifying
+    @Query("UPDATE Target t SET t.deleted = :isDeleted, t.deletedAt = :now " +
+            "WHERE t.user.id = :userId AND t.goal.id = :goalId")
+    void changeTargetsDeletedByUserIdAndGoalId(Long userId, Long goalId, boolean isDeleted, LocalDateTime now);
 }

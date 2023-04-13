@@ -1,9 +1,11 @@
 package com.successfulliferestapi.Task.repositories;
 
 import com.successfulliferestapi.Task.models.entity.Task;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -114,4 +116,29 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
             "WHERE t.status <> 'COMPLETED' AND t.dueDate IS NULL " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     List<Task> findAllUnscheduledTasks(Long userId);
+
+    //TODO: Create recurring tasks
+//    @Modifying
+//    @Transactional
+//    @Query("INSERT INTO Task (description, dueDate, isRecurring, target) " +
+//            "SELECT t.description, :newDueDate, true, t.target " +
+//            "FROM Task t " +
+//            "WHERE t.isRecurring = true")
+//    void createRecurringTasks(LocalDate newDueDate);
+
+    //Change is deleted
+//    @Modifying
+//    @Query("UPDATE Task t SET t.deleted = :isDeleted " +
+//            "WHERE t.user.id = :userId AND t.target.goal.id = :goalId")
+//    void changeTasksDeletedByUserIdAndGoalId(Long userId, Long goalId, boolean isDeleted);
+
+    @Modifying
+    @Query(value = "UPDATE tasks t " +
+            "JOIN targets tar ON t.target_id = tar.id " +
+            "JOIN goals g ON tar.goal_id = g.id " +
+            "SET t.deleted = :isDeleted, t.deleted_at = NOW() " +
+            "WHERE g.user_id = :userId AND g.id = :goalId", nativeQuery = true)
+    void changeTasksDeletedByUserIdAndGoalId(Long userId, Long goalId, boolean isDeleted);
+
+
 }
