@@ -1,7 +1,7 @@
 package com.successfulliferestapi.Config;
 
-import com.successfulliferestapi.Shared.interceptors.ConfirmAdminAuthority;
-import com.successfulliferestapi.Shared.interceptors.DisabledRegistrationInterceptor;
+import com.successfulliferestapi.User.interceptors.DisabledRegistrationInterceptor;
+import com.successfulliferestapi.Admin.interceptors.ConfirmAdminAuthority;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
