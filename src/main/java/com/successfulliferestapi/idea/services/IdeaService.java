@@ -31,10 +31,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class IdeaService {
 
-    private IdeaRepository ideaRepository;
-    private GoalRepository goalRepository;
-    private IdeaTagRepository ideaTagRepository;
-    private ModelMapper modelMapper;
+    private final IdeaRepository ideaRepository;
+    private final GoalRepository goalRepository;
+    private final IdeaTagRepository ideaTagRepository;
+    private final ModelMapper modelMapper;
 
     //CREATE Idea
     public IdeaSuccessResponseDTO add(User user, AddIdeaDTO addIdeaDTO) {
