@@ -53,6 +53,10 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserException(UserMessages.Error.LOGIN));
 
+        if (user.isBanned()) {
+            throw new UserException(UserMessages.Error.BANNED);
+        }
+
         //Verify the user password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new UserException(UserMessages.Error.LOGIN);
