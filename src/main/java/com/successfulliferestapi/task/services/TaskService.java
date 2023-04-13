@@ -11,7 +11,6 @@ import com.successfulliferestapi.Task.models.entity.Task;
 import com.successfulliferestapi.Task.models.enums.TaskPriority;
 import com.successfulliferestapi.Task.models.enums.TaskStatus;
 import com.successfulliferestapi.Task.repositories.TaskRepository;
-import com.successfulliferestapi.Task.validations.validators.TaskStatusValidator;
 import com.successfulliferestapi.User.models.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +80,7 @@ public class TaskService {
         if (addTaskDTO.getTargetId() != null) {
             taskDTO.setTargetId(addTaskDTO.getTargetId());
         }
-        return new AddTaskSuccessResponseDTO(TaskMessages.Success.ADDED,taskDTO);
+        return new AddTaskSuccessResponseDTO(TaskMessages.Success.ADDED, taskDTO);
     }
 
     //UPDATE TASK
@@ -166,45 +165,45 @@ public class TaskService {
     //GET Today Tasks
     public List<TaskDTO> getTodayTasks(Long userId) {
         LocalDate today = LocalDate.now();
-        List<Task> todayTasks = taskRepository.findNotCompletedTodayTasks(userId,today);
-        return todayTasks.stream().map(t -> modelMapper.map(t,TaskDTO.class)).collect(Collectors.toList());
+        List<Task> todayTasks = taskRepository.findNotCompletedTodayTasks(userId, today);
+        return todayTasks.stream().map(t -> modelMapper.map(t, TaskDTO.class)).collect(Collectors.toList());
     }
 
     //GET Week Tasks
     public List<TaskDTO> getWeekTasks(Long userId, String fromDate, String toDate) {
         LocalDateTime from = LocalDateTime.parse(fromDate);
         LocalDateTime to = LocalDateTime.parse(toDate);
-        List<Task> tasks = taskRepository.findAllByUserIdAndWeek(userId, from, to,from, to);
-        return tasks.stream().map(t-> modelMapper.map(t,TaskDTO.class)).collect(Collectors.toList());
+        List<Task> tasks = taskRepository.findAllByUserIdAndWeek(userId, from, to, from, to);
+        return tasks.stream().map(t -> modelMapper.map(t, TaskDTO.class)).collect(Collectors.toList());
     }
 
     //GET Month Tasks
     public List<TaskDTO> getAllTasksForMonth(Long userId, int year, int month) {
         return taskRepository.findAllByUserIdAndMonth(userId, year, month)
                 .stream()
-                .map(t -> modelMapper.map(t,TaskDTO.class))
+                .map(t -> modelMapper.map(t, TaskDTO.class))
                 .collect(Collectors.toList());
     }
 
     //GET Urgent Tasks
     public Page<TaskDTO> getUrgentTasks(Long userId, Pageable pageable) {
         return taskRepository.findByUserIdAndUrgentTrue(userId, pageable)
-                .map(t-> modelMapper.map(t, TaskDTO.class));
+                .map(t -> modelMapper.map(t, TaskDTO.class));
     }
 
     //GET Important Tasks
     public Map<String, Page<TaskDTO>> getImportantTasks(Long userId, Pageable pageable) {
         LocalDate today = LocalDate.now();
 
-        Page<Task> todayTasksDB = taskRepository.findTodayImportantTasks(userId,today,pageable);
-        Page<Task> overdueTasksDB = taskRepository.findAllOverdueImportantTasks(userId,today,pageable);
-        Page<Task> nextTasksDB = taskRepository.findAllNextImportantTasks(userId,today,pageable);
-        Page<Task> unscheduledTasksDB = taskRepository.findAllUnscheduledImportantTasks(userId,pageable);
+        Page<Task> todayTasksDB = taskRepository.findTodayImportantTasks(userId, today, pageable);
+        Page<Task> overdueTasksDB = taskRepository.findAllOverdueImportantTasks(userId, today, pageable);
+        Page<Task> nextTasksDB = taskRepository.findAllNextImportantTasks(userId, today, pageable);
+        Page<Task> unscheduledTasksDB = taskRepository.findAllUnscheduledImportantTasks(userId, pageable);
 
-        Page<TaskDTO> todayTasks = todayTasksDB.map(t-> modelMapper.map(t,TaskDTO.class));
-        Page<TaskDTO> overdueTasks = overdueTasksDB.map(t-> modelMapper.map(t,TaskDTO.class));
-        Page<TaskDTO> nextTasks = nextTasksDB.map(t-> modelMapper.map(t,TaskDTO.class));
-        Page<TaskDTO> unscheduledTasks = unscheduledTasksDB.map(t-> modelMapper.map(t,TaskDTO.class));
+        Page<TaskDTO> todayTasks = todayTasksDB.map(t -> modelMapper.map(t, TaskDTO.class));
+        Page<TaskDTO> overdueTasks = overdueTasksDB.map(t -> modelMapper.map(t, TaskDTO.class));
+        Page<TaskDTO> nextTasks = nextTasksDB.map(t -> modelMapper.map(t, TaskDTO.class));
+        Page<TaskDTO> unscheduledTasks = unscheduledTasksDB.map(t -> modelMapper.map(t, TaskDTO.class));
 
         Map<String, Page<TaskDTO>> result = new HashMap<>();
         result.put("todayTasks", todayTasks);
@@ -218,21 +217,31 @@ public class TaskService {
     public Map<String, List<TaskDTO>> getAllTasks(Long userId) {
         LocalDate todayDate = LocalDate.now();
 
-        List<Task> overdueTasks = taskRepository.findAllOverdueTasks(userId,todayDate);
-        List<Task> nextTasks = taskRepository.findAllNextTasks(userId,todayDate);
+        List<Task> overdueTasks = taskRepository.findAllOverdueTasks(userId, todayDate);
+        List<Task> nextTasks = taskRepository.findAllNextTasks(userId, todayDate);
         List<Task> unscheduledTasks = taskRepository.findAllUnscheduledTasks(userId);
 
         Map<String, List<TaskDTO>> response = new LinkedHashMap<>();
 
-        List<TaskDTO> overdueTasksDTO = overdueTasks.stream().map(t-> modelMapper.map(t,TaskDTO.class)).collect(Collectors.toList());
-        List<TaskDTO> nextTasksDTO = nextTasks.stream().map(t-> modelMapper.map(t,TaskDTO.class)).collect(Collectors.toList());
-        List<TaskDTO> unscheduledTasksDTO = unscheduledTasks.stream().map(t-> modelMapper.map(t,TaskDTO.class)).collect(Collectors.toList());
+        List<TaskDTO> overdueTasksDTO = overdueTasks.stream().map(t -> modelMapper.map(t, TaskDTO.class)).collect(Collectors.toList());
+        List<TaskDTO> nextTasksDTO = nextTasks.stream().map(t -> modelMapper.map(t, TaskDTO.class)).collect(Collectors.toList());
+        List<TaskDTO> unscheduledTasksDTO = unscheduledTasks.stream().map(t -> modelMapper.map(t, TaskDTO.class)).collect(Collectors.toList());
 
         response.put("overdueTasks", overdueTasksDTO);
         response.put("nextTasks", nextTasksDTO);
         response.put("unscheduledTasks", unscheduledTasksDTO);
         return response;
     }
+
+    //TODO: Implement recurring tasks!
+//    public void createAllRecurringTasks() {
+        // Get tomorrow's date
+//        LocalDate newDueDate = LocalDate.now().plusDays(1);
+        // Call the repository method to create recurring tasks with updated due dates
+//        taskRepository.createRecurringTasks(newDueDate);
+//    }
+
+
 //    public Page<TaskDTO> getAllTasks(Long userId, Pageable pageable) {
 //        return taskRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable)
 //                .map(t -> modelMapper.map(t, TaskDTO.class));
