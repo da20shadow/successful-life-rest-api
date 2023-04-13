@@ -12,6 +12,7 @@ public class UserMessages {
         public static final String NOT_FOUND = "User not found.";
         public static final String SAME_USERNAME = "Username is the same!";
         public static final String USERNAME_ALREADY_TAKEN = "This username is already taken!";
+        public static final String BANNED = "Your account is banned!";
     }
 
     public static class Success {

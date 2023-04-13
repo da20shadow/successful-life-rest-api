@@ -128,7 +128,7 @@ public class ModelMapperConfig {
         TypeMap<Task, TaskDTO> typeMap =
                 modelMapper.createTypeMap(Task.class, TaskDTO.class);
 
-        typeMap.addMappings(mapper -> mapper.skip(TaskDTO::setTargetId));
+//        typeMap.addMappings(mapper -> mapper.skip(TaskDTO::setTargetId));
         // add other mappings specific to AddTaskDTO and Task classes
     }
 }
