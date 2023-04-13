@@ -17,10 +17,10 @@ import lombok.Setter;
 @Table(name = "settings")
 public class SettingsEntity extends BaseEntity {
 
-    @Column(name = "setting_name", unique = true)
+    @Column(name = "setting_name", unique = true, nullable = false)
     private String settingName;
 
-    @Column(name = "value")
+    @Column(name = "value", nullable = false)
     private String value;
 
 }
