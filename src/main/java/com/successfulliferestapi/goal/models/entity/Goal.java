@@ -41,8 +41,14 @@ public class Goal extends BaseEntity {
     @Column(name = "favorite", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean favorite = false;
 
+    @Column(name = "deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean deleted = false;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @Column(name = "deadline")
     private LocalDate deadline;
@@ -57,11 +63,11 @@ public class Goal extends BaseEntity {
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Target> targets = new HashSet<>();
 
-    @Transient
-    private int totalTargets;
-
-    @Transient
-    private int totalCompletedTargets;
+//    @Transient
+//    private int totalTargets;
+//
+//    @Transient
+//    private int totalCompletedTargets;
 
     public Goal(String title, String description, GoalCategory category, LocalDate deadline, User user) {
         this.title = title;

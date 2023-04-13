@@ -20,6 +20,7 @@ public class GoalDTO {
     private String description;
     private GoalCategory category;
     private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
     private LocalDate deadline;
     private int totalTargets;
     private int totalCompletedTargets;

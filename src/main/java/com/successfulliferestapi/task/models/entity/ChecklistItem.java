@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -25,6 +27,12 @@ public class ChecklistItem extends BaseEntity {
 
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean completed = false;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")

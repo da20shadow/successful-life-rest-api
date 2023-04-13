@@ -19,7 +19,7 @@ public class AddTargetDTO {
     private String title;
 
     @NotNull(message = "Description can not be empty!")
-    @Size(min = 5,message = "Description must be at least 5 characters long!")
+    @Size(min = 5, max = 5000, message = "Description must be between 5 - 5000 characters long.")
     private String description;
 
     @NotNull(message = "Goal ID can not be empty!")

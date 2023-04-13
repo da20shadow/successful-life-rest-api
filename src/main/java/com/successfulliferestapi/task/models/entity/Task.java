@@ -48,8 +48,14 @@ public class Task extends BaseEntity {
     @Column(name = "favorite", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean favorite = false;
 
+    @Column(name = "deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean deleted = false;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;

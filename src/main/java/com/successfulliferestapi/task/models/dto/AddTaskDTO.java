@@ -18,7 +18,7 @@ public class AddTaskDTO {
     @Pattern(regexp = "^[\\p{L}\\p{N}\\p{P}\\p{Z}]*$", message = "Title can only contain letters, numbers, and characters used in sentences.")
     private String title;
 
-    @Size(min = 5, max = 1024, message = "Description must be between 5 - 1024 characters long.")
+    @Size(min = 5, max = 5000, message = "Description must be between 5 - 5000 characters long.")
     private String description;
 
     @NotNull(message = "Task status is required!")
@@ -38,10 +38,10 @@ public class AddTaskDTO {
     @Positive
     private Long targetId;
 
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$\n", message = "Please, enter valid start date format!")
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{0,2}$", message = "Please, enter valid start date format!")
     private String startDate;
 
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$\n", message = "Please, enter valid due date format!")
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{0,2}$", message = "Please, enter valid due date format!")
     private String dueDate;
 
 }

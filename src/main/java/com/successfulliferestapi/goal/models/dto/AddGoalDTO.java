@@ -20,7 +20,7 @@ public class AddGoalDTO {
     private String title;
 
     @NotBlank(message = "Description can not be empty!")
-    @Size(min = 5, message = "Description must be at least 5 characters long!")
+    @Size(min = 5, max = 5000, message = "Description must be between 5 - 5000 characters long.")
     private String description;
 
     @NotBlank(message = "Deadline can not be empty!")
