@@ -11,5 +11,7 @@ import lombok.Setter;
 public class UserDTO {
     private String firstName;
     private String email;
+    private String username;
+    private boolean banned;
     private UserRole role;
 }
