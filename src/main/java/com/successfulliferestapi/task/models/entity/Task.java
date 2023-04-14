@@ -33,21 +33,27 @@ public class Task extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private TaskStatus status = TaskStatus.TO_DO; // Set default enum value for status
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private TaskPriority priority = TaskPriority.NO_PRIORITY; // Set default enum value for priority
 
+    @Builder.Default
     @Column(name = "urgent", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean urgent = false;
 
+    @Builder.Default
     @Column(name = "important", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean important = false;
 
+    @Builder.Default
     @Column(name = "favorite", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean favorite = false;
 
+    @Builder.Default
     @Column(name = "deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean deleted = false;
 
@@ -63,6 +69,7 @@ public class Task extends BaseEntity {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
+    @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ChecklistItem> checklist = new HashSet<>();
 

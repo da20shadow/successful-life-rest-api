@@ -38,9 +38,11 @@ public class Goal extends BaseEntity {
     @Column(name = "category")
     private GoalCategory category;
 
+    @Builder.Default
     @Column(name = "favorite", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean favorite = false;
 
+    @Builder.Default
     @Column(name = "deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean deleted = false;
 
@@ -57,9 +59,11 @@ public class Goal extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Idea> ideas = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Target> targets = new HashSet<>();
 

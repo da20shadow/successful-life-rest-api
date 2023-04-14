@@ -32,9 +32,11 @@ public class Target extends BaseEntity {
     @Column(name = "description",columnDefinition = "TEXT",nullable = false)
     private String description;
 
+    @Builder.Default
     @Column(name = "favorite",columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean favorite = false;
 
+    @Builder.Default
     @Column(name = "deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean deleted = false;
 
@@ -52,6 +54,7 @@ public class Target extends BaseEntity {
     @JoinColumn(name = "goal_id",nullable = false)
     private Goal goal;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "target", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 

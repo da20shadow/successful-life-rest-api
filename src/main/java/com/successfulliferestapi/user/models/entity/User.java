@@ -40,11 +40,13 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true, length = 45)
     private String username;
 
+    @Builder.Default
     @Column
     private boolean banned = false;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.USER;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens;

@@ -31,6 +31,7 @@ public class Idea extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @Column(name = "deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean deleted = false;
 
@@ -48,6 +49,7 @@ public class Idea extends BaseEntity {
     @JoinColumn(name = "goal_id")
     private Goal goal;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "idea_tag",
             joinColumns = @JoinColumn(name = "idea_id"),

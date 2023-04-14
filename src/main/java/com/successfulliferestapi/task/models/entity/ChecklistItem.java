@@ -25,9 +25,11 @@ public class ChecklistItem extends BaseEntity {
     @Column(name = "title", length = 145)
     private String title;
 
+    @Builder.Default
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean completed = false;
 
+    @Builder.Default
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean deleted = false;
 
