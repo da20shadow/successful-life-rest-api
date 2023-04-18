@@ -33,10 +33,8 @@ public class EditTaskDTO {
 
     private boolean important;
 
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{0,2}$", message = "Please, enter valid start date format!")
     private String startDate;
 
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{0,2}$", message = "Please, enter valid due date format!")
     private String dueDate;
 
 }
