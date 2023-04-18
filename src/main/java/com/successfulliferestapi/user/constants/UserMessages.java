@@ -18,11 +18,13 @@ public class UserMessages {
     public static class Success {
         public static final String LOGIN = "Successfully logged in.";
         public static final String REGISTRATION = "Successfully registered.";
-        public static final String UPDATE = "Successfully updated the profile.";
-        public static final String UPDATE_EMAIL = "Successfully changed email.";
-        public static final String UPDATE_USERNAME = "Successfully changed username.";
-        public static final String UPDATE_PASSWORD = "Successfully changed password.";
-        public static final String UPDATE_NAMES = "Successfully changed names.";
-        public static final String DELETE = "Successfully deleted account.";
+        public static final String UPDATED = "Successfully updated the profile.";
+        public static final String UPDATED_EMAIL = "Successfully changed email.";
+        public static final String UPDATED_USERNAME = "Successfully changed username.";
+        public static final String UPDATED_PASSWORD = "Successfully changed password.";
+        public static final String UPDATED_NAMES = "Successfully changed names.";
+        public static final String DELETED = "Successfully deleted account.";
+        public static final String UPDATED_FIRSTNAME = "Successfully first name.";
+        public static final String UPDATED_LASTNAME = "Successfully last name.";
     }
 }
