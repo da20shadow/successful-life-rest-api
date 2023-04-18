@@ -29,7 +29,7 @@ public class Target extends BaseEntity {
     @Column(name = "title",nullable = false,length = 145)
     private String title;
 
-    @Column(name = "description",columnDefinition = "TEXT",nullable = false)
+    @Column(name = "description",length = 5000,nullable = false)
     private String description;
 
     @Builder.Default
