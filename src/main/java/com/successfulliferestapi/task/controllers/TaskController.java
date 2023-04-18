@@ -66,12 +66,24 @@ public class TaskController {
         }
     }
 
-    //GET Task By ID
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getTaskById(@PathVariable Long id,Authentication authentication) {
+    //DELETE task
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTaskById(@PathVariable Long id, Authentication authentication) {
         try {
             User user = (User) authentication.getPrincipal();
-            return ResponseEntity.ok(taskService.getById(id,user.getId()));
+            return ResponseEntity.ok(taskService.deleteTask(id, user.getId()));
+        } catch (TaskException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(TaskMessages.Error.UPDATE));
+        }
+    }
+
+    //GET Task By ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getTaskById(@PathVariable Long id, Authentication authentication) {
+
+        try {
+            User user = (User) authentication.getPrincipal();
+            return ResponseEntity.ok(taskService.getById(id, user.getId()));
         } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
@@ -83,6 +95,19 @@ public class TaskController {
         try {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(taskService.getTodayTasks(user.getId()));
+        } catch (TaskException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
+        }
+    }
+
+    //GET tasks by Date
+    @GetMapping("/date")
+    public ResponseEntity<?> getTasksByDate(@RequestParam(defaultValue = "") String date,
+                                            Authentication authentication) {
+        try {
+            User user = (User) authentication.getPrincipal();
+//            String decodedDate = URLDecoder.decode(date, "UTF-8"); // Decode the date string
+            return ResponseEntity.ok(taskService.getTasksByDate(user.getId(),date));
         } catch (TaskException e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(e.getMessage()));
         }
