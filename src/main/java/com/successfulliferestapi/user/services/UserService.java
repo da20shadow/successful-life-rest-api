@@ -22,7 +22,7 @@ public class UserService {
     public SuccessResponseDTO editEmail(User user, ChangeEmailRequestDTO requestDTO) {
         user.setEmail(requestDTO.getEmail());
         userRepository.save(user);
-        return new SuccessResponseDTO(UserMessages.Success.UPDATE_EMAIL);
+        return new SuccessResponseDTO(UserMessages.Success.UPDATED_EMAIL);
     }
 
     public SuccessResponseDTO editUsername(User user, ChangeUsernameRequestDTO requestDTO) {
@@ -37,7 +37,7 @@ public class UserService {
 
         user.setUsername(requestDTO.getUsername());
         userRepository.save(user);
-        return new SuccessResponseDTO(UserMessages.Success.UPDATE_USERNAME);
+        return new SuccessResponseDTO(UserMessages.Success.UPDATED_USERNAME);
     }
 
     public SuccessResponseDTO editPassword(User user, ChangePasswordRequestDTO requestDTO) {
@@ -49,19 +49,19 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
         userRepository.save(user);
-        return new SuccessResponseDTO(UserMessages.Success.UPDATE_PASSWORD);
+        return new SuccessResponseDTO(UserMessages.Success.UPDATED_PASSWORD);
     }
 
     public SuccessResponseDTO editNames(User user, ChangeNamesRequestDTO requestDTO) {
         user.setFirstName(requestDTO.getFirstName());
         user.setLastName(requestDTO.getLastName());
         userRepository.save(user);
-        return new SuccessResponseDTO(UserMessages.Success.UPDATE_NAMES);
+        return new SuccessResponseDTO(UserMessages.Success.UPDATED_NAMES);
     }
 
     public SuccessResponseDTO deleteAccount(User user) {
         userRepository.delete(user);
-        return new SuccessResponseDTO(UserMessages.Success.DELETE);
+        return new SuccessResponseDTO(UserMessages.Success.DELETED);
     }
 
     public ProfileDetailsDTO getProfile(User user) {
