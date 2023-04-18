@@ -46,6 +46,15 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     List<Task> findNotCompletedTodayTasks(Long userId, LocalDate today);
 
+    //Get Tasks By DATE
+    @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
+            "WHERE (FUNCTION('DATE', t.dueDate) = :date " +
+            "OR FUNCTION('DATE', t.startDate) = :date " +
+            "OR FUNCTION('DATE', t.startDate) < :date AND FUNCTION('DATE', t.dueDate) > :date) " +
+            "AND t.status <> 'COMPLETED' " +
+            "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
+    List<Task> findNotCompletedTasksByDate(Long userId, LocalDate date);
+
     //GET Week Tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
             "WHERE ((t.dueDate BETWEEN :dueDate AND :dueDate2) " +

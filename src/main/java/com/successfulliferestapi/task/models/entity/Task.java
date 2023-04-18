@@ -30,7 +30,7 @@ public class Task extends BaseEntity {
     @Column(name = "title", nullable = false, length = 145)
     private String title;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", length = 5000)
     private String description;
 
     @Builder.Default

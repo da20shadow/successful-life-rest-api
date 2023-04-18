@@ -1,10 +1,12 @@
 package com.successfulliferestapi.Task.services;
 
+import com.successfulliferestapi.Shared.models.dto.SuccessResponseDTO;
 import com.successfulliferestapi.Target.constants.TargetMessages;
 import com.successfulliferestapi.Target.exceptions.TargetException;
 import com.successfulliferestapi.Target.models.entity.Target;
 import com.successfulliferestapi.Target.repositories.TargetRepository;
 import com.successfulliferestapi.Task.constants.TaskMessages;
+import com.successfulliferestapi.Task.events.TaskUpdatedEvent;
 import com.successfulliferestapi.Task.exceptions.TaskException;
 import com.successfulliferestapi.Task.models.dto.*;
 import com.successfulliferestapi.Task.models.entity.Task;
@@ -15,12 +17,15 @@ import com.successfulliferestapi.User.models.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -32,6 +37,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TargetRepository targetRepository;
     private final ModelMapper modelMapper;
+//    private ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public AddTaskSuccessResponseDTO addTask(AddTaskDTO addTaskDTO, User user) {
@@ -138,7 +144,20 @@ public class TaskService {
 
         task = taskRepository.save(task);
         TaskDTO taskDTO = modelMapper.map(task, TaskDTO.class);
+
+        // Publish the TaskUpdatedEvent event
+//        eventPublisher.publishEvent(new TaskUpdatedEvent(task));
+
         return new EditTaskSuccessResponseDTO(TaskMessages.Success.UPDATED, taskDTO);
+    }
+
+    public SuccessResponseDTO deleteTask(Long taskId, Long userId) {
+        Optional<Task> optionalTask = taskRepository.findByIdAndUserId(taskId, userId);
+        if (optionalTask.isEmpty()) {
+            throw new TaskException(TaskMessages.Error.NOT_FOUND);
+        }
+        taskRepository.delete(optionalTask.get());
+        return new SuccessResponseDTO(TaskMessages.Success.DELETED);
     }
 
     @Transactional
@@ -160,6 +179,13 @@ public class TaskService {
             throw new TaskException(TaskMessages.Error.NOT_FOUND);
         }
         return modelMapper.map(optionalTask.get(), TaskDTO.class);
+    }
+
+    //Get Tasks By Date
+    public List<TaskDTO> getTasksByDate(Long userId, String stringDate) {
+        LocalDate date = LocalDate.parse(stringDate, DateTimeFormatter.ISO_DATE_TIME);
+        List<Task> todayTasks = taskRepository.findNotCompletedTasksByDate(userId, date);
+        return todayTasks.stream().map(t -> modelMapper.map(t, TaskDTO.class)).collect(Collectors.toList());
     }
 
     //GET Today Tasks
