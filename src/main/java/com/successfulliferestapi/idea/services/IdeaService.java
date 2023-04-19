@@ -15,6 +15,7 @@ import com.successfulliferestapi.Idea.models.entity.IdeaTag;
 import com.successfulliferestapi.Idea.repositories.IdeaRepository;
 import com.successfulliferestapi.Idea.repositories.IdeaTagRepository;
 import com.successfulliferestapi.Shared.models.dto.SuccessResponseDTO;
+import com.successfulliferestapi.Task.services.TaskService;
 import com.successfulliferestapi.User.models.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,10 +23,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +38,22 @@ public class IdeaService {
     private final GoalRepository goalRepository;
     private final IdeaTagRepository ideaTagRepository;
     private final ModelMapper modelMapper;
+    private static final Logger LOGGER = Logger.getLogger(TaskService.class.getName());
 
     //CREATE Idea
     public IdeaSuccessResponseDTO add(User user, AddIdeaDTO addIdeaDTO) {
 
-        Idea idea = modelMapper.map(addIdeaDTO,Idea.class);
+        // Check if an idea with the same title already exists
+        Optional<Idea> optionalIdea = ideaRepository.findByTitle(addIdeaDTO.getTitle());
+        if (optionalIdea.isPresent()) {
+            throw new IdeaException(IdeaMessages.Error.DUPLICATE_TITLE);
+        }
+
+        Idea idea = new Idea();
         idea.setUser(user);
+        idea.setCreatedAt(LocalDateTime.now());
+        idea.setTitle(addIdeaDTO.getTitle());
+        idea.setDescription(addIdeaDTO.getDescription());
 
         if (addIdeaDTO.getGoalId() != null) {
             Optional<Goal> optionalGoal = goalRepository.findByIdAndUserId(addIdeaDTO.getGoalId(),user.getId());
@@ -55,14 +68,14 @@ public class IdeaService {
 
         if (addIdeaDTO.getTags() != null) {
             Set<IdeaTag> newTags = new HashSet<>();
-            for (String newTagName : addIdeaDTO.getTags()) {
+            for (String name : addIdeaDTO.getTags()) {
                 // Check if there is an existing tag with the same name
-                IdeaTag existingTag = ideaTagRepository.findByName(newTagName);
+                IdeaTag existingTag = ideaTagRepository.findByName(name);
                 if (existingTag != null) {
                     newTags.add(existingTag);
                 } else {
                     // If there is no existing tag, create a new one
-                    IdeaTag newTag = new IdeaTag(newTagName);
+                    IdeaTag newTag = new IdeaTag(name);
                     newTags.add(newTag);
                 }
             }

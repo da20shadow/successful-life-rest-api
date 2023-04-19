@@ -17,7 +17,6 @@ public class AddIdeaDTO {
     @Size(min = 5, max = 145,message = "Title must be between 5 - 145 characters long!")
     private String title;
 
-    @NotBlank(message = "Idea description is required")
     @Size(min = 5,message = "Description must be at least 5 characters long!")
     private String description;
 

@@ -24,7 +24,8 @@ public class UserMessages {
         public static final String UPDATED_PASSWORD = "Successfully changed password.";
         public static final String UPDATED_NAMES = "Successfully changed names.";
         public static final String DELETED = "Successfully deleted account.";
-        public static final String UPDATED_FIRSTNAME = "Successfully first name.";
-        public static final String UPDATED_LASTNAME = "Successfully last name.";
+        public static final String UPDATED_FIRSTNAME = "Successfully updated first name.";
+        public static final String UPDATED_LASTNAME = "Successfully updated last name.";
+        public static final String UPDATED_ROLE = "Successfully updated user role.";
     }
 }

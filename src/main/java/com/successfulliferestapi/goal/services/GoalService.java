@@ -186,6 +186,8 @@ public class GoalService {
                 totalCompletedTargets++;
             }
         }
+        int totalIdeas = ideaRepository.countIdeasByGoalId(goalDB.getId());
+        goalDTO.setTotalIdeas(totalIdeas);
         goalDTO.setTotalTargets(targets.size());
         goalDTO.setTotalCompletedTargets(totalCompletedTargets);
         return goalDTO;

@@ -35,4 +35,7 @@ public interface IdeaRepository extends JpaRepository<Idea,Long> {
     @Query("UPDATE Idea i SET i.deleted = :isDeleted, i.deletedAt = :now " +
             "WHERE i.user.id = :userId AND i.goal.id = :goalId")
     void changeIdeasDeletedByUserIdAndGoalId(Long userId, Long goalId, boolean isDeleted, LocalDateTime now);
+
+    @Query("SELECT COUNT(i) FROM Idea i WHERE i.goal.id = :goalId")
+    int countIdeasByGoalId(Long goalId);
 }

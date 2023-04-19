@@ -71,13 +71,10 @@ public class AdminService {
         }else if (editUserDTO.getLastName() != null) {
             user.setLastName(editUserDTO.getLastName());
             message = UserMessages.Success.UPDATED_LASTNAME;
+        } else if (editUserDTO.getRole() != null) {
+            user.setRole(UserRole.valueOf(editUserDTO.getRole()));
+            message = UserMessages.Success.UPDATED_ROLE;
         }
-
-        System.out.println(user.getFirstName());
-        System.out.println(user.getLastName());
-        System.out.println(user.getUsername());
-        System.out.println(user.getEmail());
-        System.out.println(user.getRole());
 
         User updatedUser = userRepository.save(user);
 
