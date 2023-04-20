@@ -21,9 +21,9 @@ public interface GoalRepository extends JpaRepository<Goal,Long> {
 
     Optional<Goal> findByIdAndUserId(Long goalId, Long userId);
 
-    Page<Goal> findByUserId(Long userId, Pageable pageable);
+    Page<Goal> findByUserIdAndDeletedFalse(Long userId, Pageable pageable);
 
-    Page<Goal> findByUserIdAndCategory(Long userId, GoalCategory goalCategory, Pageable pageable);
+    Page<Goal> findByUserIdAndCategoryAndDeletedFalse(Long userId, GoalCategory goalCategory, Pageable pageable);
 
     //Get All Deleted goals
     @Query("SELECT g FROM Goal g WHERE g.user.id = :userId AND g.deleted = true")

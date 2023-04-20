@@ -32,10 +32,10 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     Optional<Task> findByTitleAndTargetIdAndUser_Id(String title, Long targetId, Long userId);
 
     //GET Target Tasks
-    Page<Task> findByUserIdAndTargetId(Long userId, Long targetId, Pageable pageable);
+    Page<Task> findByUserIdAndTargetIdAndDeletedFalse(Long userId, Long targetId, Pageable pageable);
 
     //GET Task by ID
-    Optional<Task> findByIdAndUserId(Long taskId, Long userId);
+    Optional<Task> findByIdAndUserIdAndDeletedFalse(Long taskId, Long userId);
 
     //GET today tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +

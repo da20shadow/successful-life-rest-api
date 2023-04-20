@@ -128,14 +128,14 @@ public class GoalService {
     //GET All User Goals
     @Transactional
     public Page<GoalDTO> getAll(Long userId, Pageable pageable) {
-        Page<Goal> goalsPage = goalRepository.findByUserId(userId,pageable);
+        Page<Goal> goalsPage = goalRepository.findByUserIdAndDeletedFalse(userId,pageable);
         return getGoalDTOS(goalsPage);
     }
 
     //GET All User Goals By Category
     @Transactional
     public Page<GoalDTO> getAllByCategory(Long userId, GoalCategory goalCategory, Pageable pageable) {
-        Page<Goal> goalsPage = goalRepository.findByUserIdAndCategory(userId, goalCategory,pageable);
+        Page<Goal> goalsPage = goalRepository.findByUserIdAndCategoryAndDeletedFalse(userId, goalCategory,pageable);
         return getGoalDTOS(goalsPage);
     }
 

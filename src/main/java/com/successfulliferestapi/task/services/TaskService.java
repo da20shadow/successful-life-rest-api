@@ -6,7 +6,6 @@ import com.successfulliferestapi.Target.exceptions.TargetException;
 import com.successfulliferestapi.Target.models.entity.Target;
 import com.successfulliferestapi.Target.repositories.TargetRepository;
 import com.successfulliferestapi.Task.constants.TaskMessages;
-import com.successfulliferestapi.Task.events.TaskUpdatedEvent;
 import com.successfulliferestapi.Task.exceptions.TaskException;
 import com.successfulliferestapi.Task.models.dto.*;
 import com.successfulliferestapi.Task.models.entity.Task;
@@ -17,8 +16,6 @@ import com.successfulliferestapi.User.models.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,11 +30,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TaskService {
-    private static final Logger LOGGER = Logger.getLogger(TaskService.class.getName());
     private final TaskRepository taskRepository;
     private final TargetRepository targetRepository;
     private final ModelMapper modelMapper;
-//    private ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public AddTaskSuccessResponseDTO addTask(AddTaskDTO addTaskDTO, User user) {
@@ -91,7 +86,7 @@ public class TaskService {
 
     //UPDATE TASK
     public EditTaskSuccessResponseDTO updateTask(Long taskId, EditTaskDTO editTaskDTO, Long userId) {
-        Optional<Task> optionalTask = taskRepository.findByIdAndUserId(taskId, userId);
+        Optional<Task> optionalTask = taskRepository.findByIdAndUserIdAndDeletedFalse(taskId, userId);
 
         if (optionalTask.isEmpty()) {
             throw new TaskException(TaskMessages.Error.NOT_FOUND);
@@ -152,7 +147,7 @@ public class TaskService {
     }
 
     public SuccessResponseDTO deleteTask(Long taskId, Long userId) {
-        Optional<Task> optionalTask = taskRepository.findByIdAndUserId(taskId, userId);
+        Optional<Task> optionalTask = taskRepository.findByIdAndUserIdAndDeletedFalse(taskId, userId);
         if (optionalTask.isEmpty()) {
             throw new TaskException(TaskMessages.Error.NOT_FOUND);
         }
@@ -162,7 +157,7 @@ public class TaskService {
 
     @Transactional
     public Page<TaskDTO> getTasksByTargetId(Long userId, Long targetId, Pageable pageable) {
-        return taskRepository.findByUserIdAndTargetId(userId, targetId, pageable)
+        return taskRepository.findByUserIdAndTargetIdAndDeletedFalse(userId, targetId, pageable)
                 .map(t -> {
                     TaskDTO taskDTO = modelMapper.map(t, TaskDTO.class);
                     if (t.getTarget().getId() != null) {
@@ -174,7 +169,7 @@ public class TaskService {
 
     //GET TASK By ID
     public TaskDTO getById(Long taskId, Long userId) {
-        Optional<Task> optionalTask = taskRepository.findByIdAndUserId(taskId, userId);
+        Optional<Task> optionalTask = taskRepository.findByIdAndUserIdAndDeletedFalse(taskId, userId);
         if (optionalTask.isEmpty()) {
             throw new TaskException(TaskMessages.Error.NOT_FOUND);
         }
