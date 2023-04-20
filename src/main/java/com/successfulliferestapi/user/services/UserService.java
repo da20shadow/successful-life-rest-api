@@ -27,12 +27,11 @@ public class UserService {
 
     public SuccessResponseDTO editUsername(User user, ChangeUsernameRequestDTO requestDTO) {
 
-        if (user.getUsername().equals(requestDTO.getUsername())) {
-            throw new UserException(UserMessages.Error.SAME_USERNAME);
-        }
-
         if (userRepository.existsByUsername(requestDTO.getUsername())) {
             throw new UserException(UserMessages.Error.USERNAME_ALREADY_TAKEN);
+        }
+        if (user.getUsername().equals(requestDTO.getUsername())) {
+            throw new UserException(UserMessages.Error.SAME_USERNAME);
         }
 
         user.setUsername(requestDTO.getUsername());
