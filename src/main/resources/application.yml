@@ -1,0 +1,21 @@
+logging:
+    level:
+        blog: WARN
+        org: WARN
+        org.hibernate.SQL: DEBUG
+server:
+    port: 8080
+spring:
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        password: ${MYSQL_PASS:}
+        url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/successful_life_api?AllowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+        username: ${MYSQL_USER:root}
+    jpa:
+        hibernate:
+            ddl-auto: update
+        open-in-view: false
+        properties:
+            hibernate:
+                format_sql: true
+        show-sql: true
