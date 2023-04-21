@@ -30,12 +30,12 @@ public class ChecklistService {
 
     public ChecklistItemSuccessResponseDTO add(Long taskId, User user, AddChecklistItemDTO checklistItem) {
         Optional<ChecklistItem> checklistItemDB =
-                checklistItemRepository.findByTitleAndTaskIdAndUserId(checklistItem.getTitle(),taskId,user.getId());
+                checklistItemRepository.findByTitleAndTaskIdAndUserIdAndDeletedFalse(checklistItem.getTitle(),taskId,user.getId());
         if (checklistItemDB.isPresent()) {
             throw new TaskException(TaskMessages.Error.DUPLICATE_CHECKLIST_ITEM_TITLE);
         }
 
-        Optional<Task> taskFromDB = taskRepository.findByIdAndUserId(taskId,user.getId());
+        Optional<Task> taskFromDB = taskRepository.findByIdAndUserIdAndDeletedFalse(taskId,user.getId());
         if (taskFromDB.isEmpty()) {
             throw new TaskException(TaskMessages.Error.NOT_FOUND);
         }
@@ -52,14 +52,14 @@ public class ChecklistService {
     }
 
     public List<ChecklistItemDTO> getAllByTaskId(Long taskId, Long userId) {
-        List<ChecklistItem> checklistItems = checklistItemRepository.findAllByTaskIdAndUserId(taskId, userId);
+        List<ChecklistItem> checklistItems = checklistItemRepository.findAllByTaskIdAndUserIdAndDeletedFalse(taskId, userId);
         return checklistItems.stream()
                 .map(checklistItem -> modelMapper.map(checklistItem, ChecklistItemDTO.class))
                 .collect(Collectors.toList());
     }
 
     public SuccessResponseDTO deleteItem(Long itemId, Long userId) {
-        Optional<ChecklistItem> item = checklistItemRepository.findByIdAndUserId(itemId, userId);
+        Optional<ChecklistItem> item = checklistItemRepository.findByIdAndUserIdAndDeletedFalse(itemId, userId);
         if (item.isEmpty()) {
             throw new TaskException(TaskMessages.Error.CHECKLIST_ITEM_NOT_FOUND);
         }
@@ -68,7 +68,7 @@ public class ChecklistService {
     }
 
     public ChecklistItemSuccessResponseDTO editItem(Long itemId, Long userId, EditChecklistItemDTO item) {
-        Optional<ChecklistItem> itemFromDB = checklistItemRepository.findByIdAndUserId(itemId, userId);
+        Optional<ChecklistItem> itemFromDB = checklistItemRepository.findByIdAndUserIdAndDeletedFalse(itemId, userId);
         if (itemFromDB.isEmpty()) {
             throw new TaskException(TaskMessages.Error.CHECKLIST_ITEM_NOT_FOUND);
         }
@@ -97,7 +97,7 @@ public class ChecklistService {
     }
 
     public SuccessResponseDTO markAllAsCompleted(Long taskId, Long userId) {
-        List<ChecklistItem> checklistItems = checklistItemRepository.findByTaskIdAndUserId(taskId, userId);
+        List<ChecklistItem> checklistItems = checklistItemRepository.findByTaskIdAndUserIdAndDeletedFalse(taskId, userId);
         for (ChecklistItem item : checklistItems) {
             item.setCompleted(true);
         }

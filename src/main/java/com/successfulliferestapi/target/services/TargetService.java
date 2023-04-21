@@ -37,7 +37,7 @@ public class TargetService {
         Goal goal = goalRepository.findByIdAndUserId(addTargetDTO.getGoalId(), user.getId())
                 .orElseThrow(() -> new GoalException(GoalMessages.Error.NOT_FOUND));
 
-        Optional<Target> existingTarget = targetRepository.findByTitleAndGoalIdAndUserId(addTargetDTO.getTitle(), goal.getId(), user.getId());
+        Optional<Target> existingTarget = targetRepository.findByTitleAndGoalIdAndUserIdAndDeletedFalse(addTargetDTO.getTitle(), goal.getId(), user.getId());
 
         if (existingTarget.isPresent()) {
             throw new TargetException(TargetMessages.Error.DUPLICATE_TITLE);
@@ -59,7 +59,7 @@ public class TargetService {
     }
 
     public UpdateTargetSuccessResponseDTO changeTitle(Long userId, Long targetId, UpdateTargetTitleDTO updateTargetTitleDTO) {
-        Optional<Target> targetDB = targetRepository.findByIdAndUserId(targetId, userId);
+        Optional<Target> targetDB = targetRepository.findByIdAndUserIdAndDeletedFalse(targetId, userId);
         if (targetDB.isEmpty()) {
             throw new TargetException(TargetMessages.Error.NOT_FOUND);
         }
@@ -71,7 +71,7 @@ public class TargetService {
     }
 
     public UpdateTargetSuccessResponseDTO changeDescription(Long userId, Long targetId, UpdateTargetDescriptionDTO updateTargetDescriptionDTO) {
-        Optional<Target> targetDB = targetRepository.findByIdAndUserId(targetId, userId);
+        Optional<Target> targetDB = targetRepository.findByIdAndUserIdAndDeletedFalse(targetId, userId);
         if (targetDB.isEmpty()) {
             throw new TargetException(TargetMessages.Error.NOT_FOUND);
         }
@@ -84,7 +84,7 @@ public class TargetService {
 
     @Transactional
     public TargetDTO getById(Long targetId, Long userId) {
-        Optional<Target> targetDB = targetRepository.findByIdAndUserId(targetId,userId);
+        Optional<Target> targetDB = targetRepository.findByIdAndUserIdAndDeletedFalse(targetId,userId);
         if (targetDB.isEmpty()) {
             throw new TargetException(TargetMessages.Error.NOT_FOUND);
         }
@@ -96,7 +96,7 @@ public class TargetService {
     public List<TargetDTO> getAllByGoalId(Long goalId, Long userId, Pageable pageable) {
         //TODO: Make it pageable and return Page<TargetDTO>!
         // Page<Target> targetPageDB = targetRepository.findAllByGoalIdAndUserId(goalId, userId, pageable);
-        List<Target> targetsDB = targetRepository.findAllByGoalIdAndUserId(goalId, userId);
+        List<Target> targetsDB = targetRepository.findAllByGoalIdAndUserIdAndDeletedFalse(goalId, userId);
         List<TargetDTO> targets = targetsDB.stream().map(t -> {
             int totalTasks = taskRepository.countByTargetId(t.getId());
             int totalCompletedTasks = taskRepository.countCompletedByTargetId(t.getId());
@@ -110,7 +110,7 @@ public class TargetService {
     }
 
     public SuccessResponseDTO deleteTarget(Long targetId, Long userId) {
-        Target target = targetRepository.findByIdAndUserId(targetId, userId)
+        Target target = targetRepository.findByIdAndUserIdAndDeletedFalse(targetId, userId)
                 .orElseThrow(() -> new TargetException(TargetMessages.Error.NOT_FOUND));
         targetRepository.delete(target);
         return new SuccessResponseDTO(TargetMessages.Success.DELETED);

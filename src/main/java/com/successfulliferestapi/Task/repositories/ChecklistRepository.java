@@ -11,13 +11,14 @@ import java.util.Optional;
 
 @Repository
 public interface ChecklistRepository extends JpaRepository<ChecklistItem,Long> {
-    List<ChecklistItem> findAllByTaskIdAndUserId(Long taskId, Long userId);
 
-    Optional<ChecklistItem> findByTitleAndTaskIdAndUserId(String title, Long taskId, Long userId);
+    List<ChecklistItem> findAllByTaskIdAndUserIdAndDeletedFalse(Long taskId, Long userId);
 
-    Optional<ChecklistItem> findByIdAndUserId(Long itemId, Long userId);
+    Optional<ChecklistItem> findByTitleAndTaskIdAndUserIdAndDeletedFalse(String title, Long taskId, Long userId);
 
-    List<ChecklistItem> findByTaskIdAndUserId(Long taskId, Long userId);
+    Optional<ChecklistItem> findByIdAndUserIdAndDeletedFalse(Long itemId, Long userId);
+
+    List<ChecklistItem> findByTaskIdAndUserIdAndDeletedFalse(Long taskId, Long userId);
 
     //Change is deleted
 //    @Modifying
