@@ -45,7 +45,7 @@ public class TaskService {
                 throw new TaskException(TaskMessages.Error.DUPLICATE_TITLE);
             });
 
-            Optional<Target> optionalTarget = targetRepository.findByIdAndUserId(addTaskDTO.getTargetId(), user.getId());
+            Optional<Target> optionalTarget = targetRepository.findByIdAndUserIdAndDeletedFalse(addTaskDTO.getTargetId(), user.getId());
             Target target = optionalTarget.orElseThrow(() -> new TargetException(TargetMessages.Error.NOT_FOUND));
             task.setTarget(target);
         }

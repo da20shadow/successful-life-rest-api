@@ -15,15 +15,15 @@ import java.util.Set;
 
 @Repository
 public interface TargetRepository extends JpaRepository<Target,Long> {
-    Optional<Target> findByTitleAndGoalIdAndUserId(String title, Long goalId, Long userId);
+    Optional<Target> findByTitleAndGoalIdAndUserIdAndDeletedFalse(String title, Long goalId, Long userId);
 
-    Optional<Target> findByIdAndUserId(Long targetId, Long userId);
+    Optional<Target> findByIdAndUserIdAndDeletedFalse(Long targetId, Long userId);
 
     //Retrieve all TARGETS by GOAL ID Pageable
-    Page<Target> findAllByGoalIdAndUserId(Long goalId, Long userId, Pageable pageable);
+    Page<Target> findAllByGoalIdAndUserIdAndDeletedFalse(Long goalId, Long userId, Pageable pageable);
 
     //Retrieve all TARGETS by GOAL ID Set
-    List<Target> findAllByGoalIdAndUserId(Long goalId, Long userId);
+    List<Target> findAllByGoalIdAndUserIdAndDeletedFalse(Long goalId, Long userId);
 
     //Change is deleted
     @Modifying
