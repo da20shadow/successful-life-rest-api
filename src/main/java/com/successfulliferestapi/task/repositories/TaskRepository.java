@@ -21,15 +21,15 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     int countByTargetId(Long targetId);
 
     // Retrieve count of completed tasks by targetId
-    @Query("SELECT COUNT(t) FROM Task t WHERE t.target.id = :targetId AND t.status = 'COMPLETED'")
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.target.id = :targetId AND t.status = 'COMPLETED' AND t.deleted = FALSE")
     int countCompletedByTargetId(Long targetId);
 
     // Retrieve completed tasks by targetId
-    @Query("SELECT t FROM Task t WHERE t.target.id = :targetId AND t.status = 'COMPLETED'")
+    @Query("SELECT t FROM Task t WHERE t.target.id = :targetId AND t.status = 'COMPLETED' AND t.deleted = FALSE")
     Page<Task> findCompletedByTargetId(Long targetId, Pageable pageable);
 
     //GET Task by title, target ID, and user ID
-    Optional<Task> findByTitleAndTargetIdAndUser_Id(String title, Long targetId, Long userId);
+    Optional<Task> findByTitleAndTargetIdAndUser_IdAAndDeletedFalse(String title, Long targetId, Long userId);
 
     //GET Target Tasks
     Page<Task> findByUserIdAndTargetIdAndDeletedFalse(Long userId, Long targetId, Pageable pageable);
@@ -42,7 +42,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
             "WHERE (FUNCTION('DATE', t.dueDate) = :today " +
             "OR FUNCTION('DATE', t.startDate) = :today " +
             "OR FUNCTION('DATE', t.startDate) < :today AND FUNCTION('DATE', t.dueDate) > :today) " +
-            "AND t.status <> 'COMPLETED' " +
+            "AND t.status <> 'COMPLETED' AND t.deleted = FALSE " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     List<Task> findNotCompletedTodayTasks(Long userId, LocalDate today);
 
@@ -51,7 +51,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
             "WHERE (FUNCTION('DATE', t.dueDate) = :date " +
             "OR FUNCTION('DATE', t.startDate) = :date " +
             "OR FUNCTION('DATE', t.startDate) < :date AND FUNCTION('DATE', t.dueDate) > :date) " +
-            "AND t.status <> 'COMPLETED' " +
+            "AND t.status <> 'COMPLETED' AND t.deleted = FALSE" +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     List<Task> findNotCompletedTasksByDate(Long userId, LocalDate date);
 
@@ -59,7 +59,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
             "WHERE ((t.dueDate BETWEEN :dueDate AND :dueDate2) " +
             "OR (t.startDate BETWEEN :startDate AND :startDate2)) " +
-            "AND t.status <> 'COMPLETED'")
+            "AND t.status <> 'COMPLETED' AND t.deleted = FALSE ")
     List<Task> findAllByUserIdAndWeek(Long userId, LocalDateTime dueDate, LocalDateTime dueDate2,
                                       LocalDateTime startDate, LocalDateTime startDate2);
 
@@ -67,7 +67,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
             "WHERE (FUNCTION('YEAR', t.dueDate) = :year AND FUNCTION('MONTH', t.dueDate) = :month " +
             "OR FUNCTION('YEAR', t.startDate) = :year AND FUNCTION('MONTH', t.startDate) = :month ) " +
-            "AND t.status <> 'COMPLETED'")
+            "AND t.status <> 'COMPLETED' AND t.deleted = FALSE")
     List<Task> findAllByUserIdAndMonth(Long userId, int year, int month);
 
 
@@ -79,20 +79,20 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
             "WHERE (FUNCTION('DATE', t.dueDate) = :today " +
             "OR FUNCTION('DATE', t.startDate) = :today " +
             "OR FUNCTION('DATE', t.startDate) < :today AND FUNCTION('DATE', t.dueDate) > :today) " +
-            "AND t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "AND t.status <> 'COMPLETED' AND t.important = TRUE AND t.deleted = FALSE " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     Page<Task> findTodayImportantTasks(Long userId, LocalDate today, Pageable pageable);
 
     //Get Important Overdue tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
             "WHERE FUNCTION('DATE', t.dueDate) < :today " +
-            "AND t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "AND t.status <> 'COMPLETED' AND t.important = TRUE AND t.deleted = FALSE " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     Page<Task> findAllOverdueImportantTasks(Long userId, LocalDate today, Pageable pageable);
 
     //Get Next Important tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
-            "WHERE t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "WHERE t.status <> 'COMPLETED' AND t.important = TRUE AND t.deleted = FALSE " +
             "AND (function('date',t.startDate) > :today " +
             "OR function('date',t.dueDate) > :today AND t.startDate IS NULL) " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
@@ -100,7 +100,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
 
     //Get unscheduled important tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
-            "WHERE t.status <> 'COMPLETED' AND t.important = TRUE " +
+            "WHERE t.status <> 'COMPLETED' AND t.important = TRUE AND t.deleted = FALSE " +
             "AND t.dueDate IS NULL " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     Page<Task> findAllUnscheduledImportantTasks(Long userId, Pageable pageable);
@@ -108,13 +108,13 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     //Get Overdue tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
             "WHERE FUNCTION('DATE', t.dueDate) < :today " +
-            "AND t.status <> 'COMPLETED' " +
+            "AND t.status <> 'COMPLETED' AND t.deleted = FALSE " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     List<Task> findAllOverdueTasks(Long userId, LocalDate today);
 
     //Get Next tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
-            "WHERE t.status <> 'COMPLETED' " +
+            "WHERE t.status <> 'COMPLETED' AND t.deleted = FALSE " +
             "AND (function('date',t.startDate) > :today " +
             "OR function('date',t.dueDate) > :today AND t.startDate IS NULL) " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
@@ -122,7 +122,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
 
     //Get unscheduled tasks
     @Query("SELECT t FROM Task t JOIN t.user u ON u.id = :userId " +
-            "WHERE t.status <> 'COMPLETED' AND t.dueDate IS NULL " +
+            "WHERE t.status <> 'COMPLETED' AND t.dueDate IS NULL AND t.deleted = FALSE " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     List<Task> findAllUnscheduledTasks(Long userId);
 
