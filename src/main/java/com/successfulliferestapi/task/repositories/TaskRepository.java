@@ -29,7 +29,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     Page<Task> findCompletedByTargetId(Long targetId, Pageable pageable);
 
     //GET Task by title, target ID, and user ID
-    Optional<Task> findByTitleAndTargetIdAndUser_IdAAndDeletedFalse(String title, Long targetId, Long userId);
+    Optional<Task> findByTitleAndTargetIdAndUser_IdAndDeletedFalse(String title, Long targetId, Long userId);
 
     //GET Target Tasks
     Page<Task> findByUserIdAndTargetIdAndDeletedFalse(Long userId, Long targetId, Pageable pageable);
@@ -51,7 +51,7 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
             "WHERE (FUNCTION('DATE', t.dueDate) = :date " +
             "OR FUNCTION('DATE', t.startDate) = :date " +
             "OR FUNCTION('DATE', t.startDate) < :date AND FUNCTION('DATE', t.dueDate) > :date) " +
-            "AND t.status <> 'COMPLETED' AND t.deleted = FALSE" +
+            "AND t.status <> 'COMPLETED' AND t.deleted = FALSE " +
             "ORDER BY t.dueDate, t.priority DESC, t.urgent DESC")
     List<Task> findNotCompletedTasksByDate(Long userId, LocalDate date);
 

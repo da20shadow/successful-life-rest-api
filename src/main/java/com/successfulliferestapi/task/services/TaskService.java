@@ -40,7 +40,7 @@ public class TaskService {
         Task task = modelMapper.map(addTaskDTO, Task.class);
 
         if (addTaskDTO.getTargetId() != null) {
-            Optional<Task> existTask = taskRepository.findByTitleAndTargetIdAndUser_IdAAndDeletedFalse(addTaskDTO.getTitle(), addTaskDTO.getTargetId(), user.getId());
+            Optional<Task> existTask = taskRepository.findByTitleAndTargetIdAndUser_IdAndDeletedFalse(addTaskDTO.getTitle(), addTaskDTO.getTargetId(), user.getId());
             existTask.ifPresent(t -> {
                 throw new TaskException(TaskMessages.Error.DUPLICATE_TITLE);
             });
