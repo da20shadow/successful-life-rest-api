@@ -58,8 +58,9 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        //dev http://192.168.0.104:3000
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://192.168.0.104:3000"));
+        configuration.setAllowedOrigins(Collections.singletonList("http://sourceofanswers.esy.es"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","PATCH","DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         configuration.setAllowCredentials(true);
