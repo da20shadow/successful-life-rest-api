@@ -24,7 +24,6 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    @CrossOrigin(origins = "http://sourceofanswers.esy.es")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO request, BindingResult result) {
         if (result.hasErrors()) {
             // If there are validation errors, return them with a 400 Bad Request status code
